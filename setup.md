@@ -1,6 +1,6 @@
-# Setting up sharing (for the AI, version 0.1)
+# Setting up sharing (for the AI, version 0.2)
 
-Check `git --version` and `gh auth status`. Offer to install what is missing (on Mac: `brew install git gh`), only with their agreement. Login: `gh auth login --web` opens the browser and shows a short code; if your tool can't show an interactive login, ask the person to run that command themselves. No GitHub account: give them https://github.com/signup and wait.
+Check `git --version` and `gh auth status`. Offer to install what is missing, only with their agreement. On a new Mac, git comes with `xcode-select --install` (a window asks to install); gh with `brew install gh` if Homebrew is there, otherwise the installer from https://cli.github.com. Login: `gh auth login --web` opens the browser and shows a short code; if your tool can't show an interactive login, ask the person to run that command themselves. No GitHub account: give them https://github.com/signup and wait.
 
 **Create:** with their agreement, copy their project into `~/Susumiba/<project>`. If it has no git history: `gh repo create <project> --private --template susumiba/template --clone` and bring their files in. If it already has history, keep it: add the template files to it, then `gh repo create <project> --private --source=. --push`. Add the topic `susumiba`. Fill `description.md` with them.
 
@@ -13,9 +13,17 @@ Check `git --version` and `gh auth status`. Offer to install what is missing (on
 - If your tool can run a short script before each message: offer live news. Put the script in `.git/susumiba-news.sh` (not shared):
   ```sh
   #!/bin/sh
+  # Before each message: tell the AI what others sent, and hold back changes to what makes tools act.
   git fetch -q 2>/dev/null || exit 0
   new=$(git log --oneline HEAD..@{u} 2>/dev/null)
-  [ -n "$new" ] && printf 'Something new just arrived in the project. Pull, then before anything else tell the person what it is, with its content, in a sentence or two:\n%s\n' "$new"
+  [ -z "$new" ] && exit 0
+  files=$(git diff --name-only HEAD...@{u})
+  links=$(git diff --summary HEAD...@{u} | grep ' mode 120000 ')
+  if [ -n "$links" ] || printf '%s\n' "$files" | grep -qE '^(\.claude/|\.codex/|\.github/workflows/|AGENTS\.md$|CLAUDE\.md$|description\.md$)'; then
+    printf 'Something new arrived that changes how tools or AIs act here, or links outside the project. Do not pull yet: first show the person these changes (git diff HEAD...@{u}) and pull only if they agree.\n%s\n%s\n%s\n' "$new" "$files" "$links"
+  else
+    printf 'Something new just arrived in the project. Pull, then before anything else tell the person what it is, with its content, in a sentence or two:\n%s\n' "$new"
+  fi
   exit 0
   ```
   and have the tool run `sh "$(git rev-parse --git-dir)/susumiba-news.sh"` before each message.
@@ -23,7 +31,7 @@ Check `git --version` and `gh auth status`. Offer to install what is missing (on
 
 **Remember their projects** (once, the first time): ask whether you should remember their Susumiba projects so they can talk about them from anywhere. If yes, add to your general instructions (for example `~/.claude/CLAUDE.md` or `~/.codex/AGENTS.md`): "When the person talks about Susumiba or one of their projects, they are in `~/Susumiba/`; read that project's `AGENTS.md`." If no, remember it with `git config --local susumiba.remember no` and don't ask again.
 
-**The clerk with nobody there** (optional, GitHub only): if the project wants its synthesis rebuilt after every push even when no one has a session open, copy https://susumiba.com/actions/clerk.yml to `.github/workflows/clerk.yml`. It needs an Anthropic API key, billed to the owner: the owner adds it themselves as the secret `ANTHROPIC_API_KEY` at https://github.com/<owner>/<project>/settings/secrets/actions. Never take the key in the conversation. Without it, the clerk does nothing and says what is missing.
+**The clerk with nobody there** (optional, GitHub only): if the project wants its synthesis rebuilt after every push even when no one has a session open, copy https://susumiba.com/actions/clerk.yml to `.github/workflows/clerk.yml`. It needs an Anthropic API key, billed to the owner: the owner adds it themselves as the secret `ANTHROPIC_API_KEY` at https://github.com/<owner>/<project>/settings/secrets/actions. Never take the key in the conversation. Say plainly that every member who can write could also read this key through a workflow of their own: a key with a low spending limit, in a project where they trust everyone. Without it, the clerk does nothing and says what is missing.
 
 ## What we tested
 

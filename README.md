@@ -1,4 +1,4 @@
-> **For AIs:** if a person sent you here, read [`ia.md`](https://susumiba.com/ia.md) and follow it. It is short and says everything you need. Version 0.1.
+> **For AIs:** if a person sent you here, read [`ia.md`](https://susumiba.com/ia.md) and follow it. It is short and says everything you need. Version 0.2.
 
 # Susumiba
 
@@ -35,9 +35,21 @@ A git repository made from [susumiba/template](https://github.com/susumiba/templ
 - Everything else in the instructions is discipline too. A trapped text could get around it. We say so.
 - git records who wrote what and when, as declared; not where the content came from.
 - **One project per conversation.** If your AI can see several projects or folders at once, it can carry information from one to another without being asked.
-- Settings that make your tools run commands (allowed git commands, live news) stay on your computer and are never shared, so no member can change what runs on someone else's machine. If a project ever brings in such files, your AI tells you first.
 - Never put keys or passwords in a project.
 - GitHub limits: everyone needs a GitHub account; 100 MB per file.
+
+## What we protect against, and what stays vigilance
+
+Anyone in a project can write in it, including someone who means harm. What the instructions and the template do:
+- **Nothing that runs is shared by default.** Allowed git commands and live news are set on each computer and never sent.
+- **Before taking in what others sent**, your AI looks at what changed. If it touches what makes tools run things or changes how every AI behaves (`.claude/`, `.codex/`, `.github/workflows/`, `AGENTS.md`, `CLAUDE.md`, `description.md`), or adds symbolic links that could point outside the project, it shows you first and waits for your agreement.
+- **The optional clerk Action** can only rewrite the synthesis and the index; it runs no commands.
+- We test these attacks at each version (`tests/run.sh`): a hidden hook, a link to a file outside the project, instructions slipped into a contribution or the description.
+
+What stays vigilance:
+- What your AI does with a trapped text depends on the model. In our tests it refused every time; that is not a guarantee.
+- **A key stored in the project (the clerk's) can be read by every member**, through a workflow of their own. Use a key with a low spending limit, only where you trust everyone.
+- Everyone you invite sees everything in the project and its history.
 
 ## At home or elsewhere
 

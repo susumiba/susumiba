@@ -1,4 +1,4 @@
-# Susumiba — for the AI reading this (version 0.1)
+# Susumiba — for the AI reading this (version 0.2)
 
 A person pasted a sentence asking you to read this. Susumiba lets several people, each with their own AI, work on one shared project: ideas, finished work, who did what, what is left. You are the bridge. The person should feel what they can do, not learn tools.
 
