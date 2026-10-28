@@ -1,0 +1,42 @@
+# Susumiba clerk: rebuilds synthesis.md and index.md after each push, with nobody's session open.
+# Optional. Copy to .github/workflows/clerk.yml and add the secret ANTHROPIC_API_KEY to the repository.
+# Its own pushes use the built-in token, so they never trigger it again.
+name: clerk
+on:
+  push:
+    branches: [main]
+    paths-ignore: [synthesis.md, index.md]
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+concurrency:
+  group: clerk
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  clerk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the key
+        id: key
+        env:
+          KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::notice::The clerk needs an ANTHROPIC_API_KEY secret in this repository's settings. Nothing was changed."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.key.outputs.ok == 'true'
+        with:
+          fetch-depth: 0
+      - uses: anthropics/claude-code-action@v1
+        if: steps.key.outputs.ok == 'true'
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            You are the clerk of this Susumiba project. Read AGENTS.md. If there is new material since the commit named on the `covers:` line of synthesis.md, rebuild synthesis.md and index.md as AGENTS.md describes, then commit and push. Otherwise change nothing.
+          claude_args: --allowedTools "Read,Write,Edit,Bash(git log *),Bash(git diff *),Bash(git show *),Bash(git status *),Bash(git add *),Bash(git commit *),Bash(git push *),Bash(git rev-parse *)"
