@@ -9,7 +9,7 @@ Check `git --version` and `gh auth status`. Offer to install what is missing, on
 **Join:** `gh api user/repository_invitations`, accept the one for the project with their agreement, then `gh repo clone <owner>/<project> ~/Susumiba/<project>`.
 
 **Then, on this computer only** (after creating and after joining). Anything that makes a tool run commands stays out of the shared files: another member could change it, and it would run on everyone's computer. So these settings are written locally, listed in `.git/info/exclude`, and never sent.
-- If your tool asks permission for every command, or can't write in `.git`: offer to allow only the git commands this project needs (`git pull`, `fetch`, `status`, `log`, `add`, `commit`, `push`, and `git config --local susumiba.*`), for this folder, in your tool's local settings. Never full access by default. What it means for the person: no more clicking "allow" for each of these; it changes nothing about what is shared, you still send only what they tell you to.
+- If your tool asks permission for every command, or can't write in `.git`: offer to allow only the git commands this project needs (`git pull`, `fetch`, `status`, `log`, `diff`, `add`, `commit`, `push`, `ls-remote`, and `git config --local susumiba.*`), for this folder, in your tool's local settings. Never full access by default. What it means for the person: no more clicking "allow" for each of these; it changes nothing about what is shared, you still send only what they tell you to.
 - If your tool can run a short script before each message: offer live news. Put the script in `.git/susumiba-news.sh` (not shared):
   ```sh
   #!/bin/sh
