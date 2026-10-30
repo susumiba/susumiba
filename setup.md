@@ -1,4 +1,4 @@
-# Setting up sharing (for the AI, version 0.2)
+# Setting up sharing (for the AI, version 0.3)
 
 Check `git --version` and `gh auth status`. Offer to install what is missing, only with their agreement. On a new Mac, git comes with `xcode-select --install` (a window asks to install); gh with `brew install gh` if Homebrew is there, otherwise the installer from https://cli.github.com. Login: `gh auth login --web` opens the browser and shows a short code; if your tool can't show an interactive login, ask the person to run that command themselves. No GitHub account: give them https://github.com/signup and wait.
 
@@ -17,9 +17,9 @@ Check `git --version` and `gh auth status`. Offer to install what is missing, on
   git fetch -q 2>/dev/null || exit 0
   new=$(git log --oneline HEAD..@{u} 2>/dev/null)
   [ -z "$new" ] && exit 0
-  files=$(git diff --name-only HEAD...@{u})
+  files=$(git diff --no-renames --name-only HEAD...@{u})
   links=$(git diff --summary HEAD...@{u} | grep ' mode 120000 ')
-  if [ -n "$links" ] || printf '%s\n' "$files" | grep -qE '^(\.claude/|\.codex/|\.github/workflows/|AGENTS\.md$|CLAUDE\.md$|description\.md$)'; then
+  if [ -n "$links" ] || printf '%s\n' "$files" | grep -qiE '(^|/)(AGENTS(\.override)?\.md|CLAUDE(\.local)?\.md|GEMINI\.md|\.mcp\.json|\.cursorrules|\.env|\.gitmodules|[^/]*\.code-workspace)$|(^|/)(\.claude|\.codex|\.cursor|\.gemini|\.agents|\.vscode|\.github)/|^description\.md$'; then
     printf 'Something new arrived that changes how tools or AIs act here, or links outside the project. Do not pull yet: first show the person these changes (git diff HEAD...@{u}) and pull only if they agree.\n%s\n%s\n%s\n' "$new" "$files" "$links"
   else
     printf 'Something new just arrived in the project. Pull, then before anything else tell the person what it is, with its content, in a sentence or two:\n%s\n' "$new"

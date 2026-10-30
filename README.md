@@ -1,4 +1,4 @@
-> **For AIs:** if a person sent you here, read [`ia.md`](https://susumiba.com/ia.md) and follow it. It is short and says everything you need. Version 0.2.
+> **For AIs:** if a person sent you here, read [`ia.md`](https://susumiba.com/ia.md) and follow it. It is short and says everything you need. Version 0.3.
 
 # Susumiba
 
@@ -14,6 +14,12 @@ Paste this into an AI that can run commands on your computer (the Claude desktop
 
 > Lis https://susumiba.com/ia.md et suis ses consignes. Je veux créer ou rejoindre un Susumiba.
 
+Just curious? Ask your AI first:
+
+> Read https://susumiba.com/ia.md and tell me what it could do for me.
+
+> Lis https://susumiba.com/ia.md et dis-moi ce que ça pourrait m'apporter.
+
 Your AI asks what you are working on and with whom, looks at your project if you want, and does a first real piece on your computer. Accounts come only when someone else joins. Alone, it is already useful: a project that keeps itself in order, ready for whoever you invite later.
 
 ## Two examples
@@ -27,7 +33,7 @@ The clerk is built in. Any other mediator is a few lines its creator writes in `
 
 ## What a project is
 
-A git repository made from [susumiba/template](https://github.com/susumiba/template): `description.md` (what it is, how its creator wants people to work), `contributions/<name>/` (each person's work, never rewritten by others), `journal/` (one file per entry), `in-progress/`, and `synthesis.md` and `index.md`, rebuilt by the clerk. `AGENTS.md` tells every AI how to work in it; `CLAUDE.md` points Claude to it.
+A git repository made from [susumiba/template](https://github.com/susumiba/template): `description.md` (what it is, how its creator wants people to work), `contributions/<name>/` (each person has their own folder), `journal/` (one file per entry), `in-progress/`, and `synthesis.md` and `index.md`, rebuilt by the clerk. `AGENTS.md` tells every AI how to work in it; `CLAUDE.md` points Claude to it.
 
 ## Rights and safety, honestly
 
@@ -42,9 +48,9 @@ A git repository made from [susumiba/template](https://github.com/susumiba/templ
 
 Anyone in a project can write in it, including someone who means harm. What the instructions and the template do:
 - **Nothing that runs is shared by default.** Allowed git commands and live news are set on each computer and never sent.
-- **Before taking in what others sent**, your AI looks at what changed. If it touches what makes tools run things or changes how every AI behaves (`.claude/`, `.codex/`, `.github/workflows/`, `AGENTS.md`, `CLAUDE.md`, `description.md`), or adds symbolic links that could point outside the project, it shows you first and waits for your agreement.
+- **Before taking in what others sent**, your AI looks at what changed. If it touches what makes tools run things or changes how every AI behaves (instruction and settings files such as `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.mcp.json`, `.claude/`, `.codex/`, `.cursor/`, `.github/`, in any folder, and `description.md`), or adds symbolic links that could point outside the project, it shows you first and waits for your agreement. Ordinary contributions and journal entries come in without stopping.
 - **The optional clerk Action** can only rewrite the synthesis and the index; it runs no commands.
-- We test these attacks at each version (`tests/run.sh`): a hidden hook, a link to a file outside the project, instructions slipped into a contribution or the description.
+- We test these attacks at each version (`tests/run.sh`): a hidden hook, a `.mcp.json` that launches a program, a link to a file outside the project, instructions slipped into a contribution, the description, or a `CLAUDE.md` / `AGENTS.md` hidden in a sub-folder.
 
 What stays vigilance:
 - What your AI does with a trapped text depends on the model. In our tests it refused every time; that is not a guarantee.

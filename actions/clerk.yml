@@ -4,6 +4,7 @@
 # spending limit, and only in a project where you trust every member.
 # The clerk can only read the project and rewrite synthesis.md and index.md; this workflow, not the AI,
 # commits and pushes those two files. Its pushes use the built-in token, so they never trigger it again.
+# Actions are pinned by commit hash: whoever controls a tag elsewhere can't change what runs here.
 name: clerk
 on:
   push:
@@ -32,7 +33,7 @@ jobs:
           else
             echo "ok=true" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         if: steps.key.outputs.ok == 'true'
         with:
           fetch-depth: 0
@@ -45,7 +46,7 @@ jobs:
           git log --format='%H %an %s' --name-status "$range" -- . ':!synthesis.md' ':!index.md' > "$RUNNER_TEMP/new.txt"
           [ -s "$RUNNER_TEMP/new.txt" ] && echo "any=true" >> "$GITHUB_OUTPUT" || echo "any=false" >> "$GITHUB_OUTPUT"
           echo "last=$(git log -1 --format=%H -- . ':!synthesis.md' ':!index.md')" >> "$GITHUB_OUTPUT"
-      - uses: anthropics/claude-code-action@v1
+      - uses: anthropics/claude-code-action@d70510b174a1244958df0b03166a54912811f3e6 # v1.0.264
         if: steps.key.outputs.ok == 'true' && steps.new.outputs.any == 'true'
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
