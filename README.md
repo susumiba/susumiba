@@ -10,17 +10,11 @@ People and AIs, as many as you like, work on the same project. Each brings ideas
 
 Paste this into an AI that can run commands on your computer (the Claude desktop app, "Code" tab; Codex in the ChatGPT desktop app, on "This computer"; Claude Code; Codex):
 
-> Read https://susumiba.com/ia.md and follow its instructions. I want to create or join a Susumiba.
-
-> Lis https://susumiba.com/ia.md et suis ses consignes. Je veux créer ou rejoindre un Susumiba.
-
-Just curious? Ask your AI first:
-
 > Read https://susumiba.com/ia.md and tell me what it could do for me.
 
 > Lis https://susumiba.com/ia.md et dis-moi ce que ça pourrait m'apporter.
 
-Your AI asks what you are working on and with whom, looks at your project if you want, and does a first real piece on your computer. Accounts come only when someone else joins. Alone, it is already useful: a project that keeps itself in order, ready for whoever you invite later.
+Your AI tells you what it could change for you, from what it already knows of you and your projects, or after one or two questions and a look at your documents. If you want to try, it does a first real piece on your computer. Invited to a project? Say so, and your AI joins it. Accounts come only when someone else joins. Alone, it is already useful: a project that keeps itself in order, ready for whoever you invite later.
 
 ## Two examples
 

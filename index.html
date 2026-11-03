@@ -148,6 +148,11 @@ html.descendu .e1-image::after{opacity:var(--voile)}
 /* la démo */
 .legende{font:400 13px/1.5 var(--f-fixe); color:var(--texte-doux); margin-bottom:14px}
 .cadre-demo{display:block; width:100%; aspect-ratio:16/9; border:0; border-radius:10px; background:var(--creux); box-shadow:var(--ombre-ambiance), var(--ombre-portee)}
+.fermer-demo{display:none}
+html.demo-agrandie{overflow:hidden}
+html.demo-agrandie .cadre-demo{position:fixed; z-index:1000; left:0; top:0; width:100vw; height:100dvh; aspect-ratio:auto; border-radius:0; background:#000}
+html.demo-agrandie .fermer-demo{display:grid; place-items:center; position:fixed; z-index:1001; top:12px; right:12px; width:44px; height:44px; border:0; border-radius:50%; background:rgba(0,0,0,.6); color:#fff; font:400 28px/1 var(--f-texte); cursor:pointer}
+@media (orientation:portrait){ html.demo-agrandie .cadre-demo{width:100dvh; height:100vw; transform-origin:0 0; transform:rotate(90deg) translateY(-100%)} }
 
 /* Plus rien n'attend personne */
 .b-grille{display:grid; gap:36px; align-items:center}
@@ -156,6 +161,7 @@ html.descendu .e1-image::after{opacity:var(--voile)}
 .lignes li:last-child{border-bottom:1px solid var(--trait)}
 .b-image{justify-self:center; width:min(100%, 460px)}
 .b-image img{display:block; width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; object-position:50% 40%; border-radius:14px; box-shadow:var(--ombre-ambiance), var(--ombre-portee)}
+@media (max-width:639px){ .b-image img{aspect-ratio:4/3} }
 .b-image figcaption{margin-top:12px; font:400 13px/1.5 var(--f-fixe); color:var(--texte-doux); text-align:center}
 @media (max-width:1023px){ .b-image{margin-top:12px} }
 @media (min-width:1024px){ .b-grille{grid-template-columns:6fr 5fr; gap:72px} .lignes li{font-size:22px; padding:16px 0} }
@@ -252,6 +258,7 @@ html.descendu .e1-image::after{opacity:var(--voile)}
         <h2 class="e-titre titre-demo" data-k="v0">Coordinate chaos towards your goals.</h2>
         <p class="legende" data-k="v1">One minute, no sound.</p>
         <iframe class="cadre-demo" src="/demo.html?nu" title="Susumiba demo" allow="fullscreen" loading="eager"></iframe>
+        <button class="fermer-demo" type="button" aria-label="Close the demo">×</button>
       </div>
     </section>
 
@@ -318,7 +325,7 @@ html.descendu .e1-image::after{opacity:var(--voile)}
           <p class="e-chapo" data-k="o2">No server on our side. Your project is a private git repo, in your GitHub account.</p>
           <div class="liens">
             <a class="lien-fort" href="https://github.com/susumiba/susumiba#rights-and-safety-honestly" data-k="o7">Permissions and security, honestly →</a>
-            <a class="depot" href="https://github.com/susumiba"><b>github.com/susumiba</b><small data-k="o8">all the code, open · MIT license</small></a>
+            <a class="depot" href="https://github.com/susumiba/susumiba"><b>github.com/susumiba/susumiba</b><small data-k="o8">all the code, open · MIT license</small></a>
           </div>
         </div>
         <ul class="quatre">
@@ -347,6 +354,13 @@ html.descendu .e1-image::after{opacity:var(--voile)}
   var e1 = document.querySelector('.e1');
   function descendu() { H.classList.toggle('descendu', window.scrollY > 0.6 * e1.offsetHeight); }
   addEventListener('scroll', descendu, { passive: true }); descendu();
+
+  /* la démo agrandie : demandée par la démo quand le plein écran n'existe pas (iPhone) */
+  var cadre = document.querySelector('.cadre-demo');
+  function agrandir(on) { H.classList.toggle('demo-agrandie', on); try { cadre.contentWindow.postMessage({ susumiba: 'plein-etat', on: on }, '*'); } catch (e) {} }
+  addEventListener('message', function (e) { if (e.source === cadre.contentWindow && e.data && e.data.susumiba === 'plein') agrandir(!H.classList.contains('demo-agrandie')); });
+  document.querySelector('.fermer-demo').addEventListener('click', function () { agrandir(false); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape' && H.classList.contains('demo-agrandie')) agrandir(false); });
 
   /* les boutons Copier */
   document.querySelectorAll('.copier').forEach(function (b) {

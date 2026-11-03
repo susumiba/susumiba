@@ -261,7 +261,9 @@ button{font:inherit; color:inherit}
 html.nu, html.nu body{background:#000; overflow:hidden}
 .nu .tete, .nu .choix, .nu .raison, .nu .aide{display:none}
 .nu .page{max-width:none; padding:0}
-.nu .scene{margin:0; max-width:none; max-height:100vh; border-radius:0; box-shadow:none}
+.nu .scene{margin:0; width:100vw; height:100vh; max-width:none; max-height:none; aspect-ratio:auto; border-radius:0; box-shadow:none}
+html.agrandi{overflow:hidden}
+html.agrandi .scene{position:fixed; inset:0; z-index:100; width:100vw; height:100dvh; max-width:none; max-height:none; margin:0; border-radius:0; aspect-ratio:auto}
 </style>
 
 <main class="page">
@@ -687,8 +689,16 @@ html.nu, html.nu body{background:#000; overflow:hidden}
   const montre = () => { scene.classList.add('montre'); clearTimeout(montreT); montreT = setTimeout(() => scene.classList.remove('montre'), 2000); };
 
   /* le plein écran : refusé dans certaines vues, on l'ignore alors */
-  const ecranPlein = () => document.fullscreenElement === scene;
-  const plein = () => { manuel = true; try { const p = ecranPlein() ? document.exitFullscreen() : scene.requestFullscreen(); if (p && p.catch) p.catch(() => {}); } catch (e) {} };
+  /* l'iPhone n'a pas de plein écran pour une page : dans le site, la page agrandit le cadre de la démo (tourné si le téléphone est debout) ; seule, la démo remplit la fenêtre */
+  let agrandi = false;
+  const ecranPlein = () => document.fullscreenElement === scene || agrandi;
+  const plein = () => {
+    manuel = true;
+    if (document.fullscreenEnabled && scene.requestFullscreen) { try { const p = document.fullscreenElement === scene ? document.exitFullscreen() : scene.requestFullscreen(); if (p && p.catch) p.catch(() => {}); } catch (e) {} return; }
+    if (Q.has('nu') && parent !== window) { parent.postMessage({ susumiba: 'plein' }, '*'); return; }
+    agrandi = !agrandi; document.documentElement.classList.toggle('agrandi', agrandi); iconePlein();
+  };
+  addEventListener('message', e => { if (e.source === parent && e.data && e.data.susumiba === 'plein-etat') { agrandi = !!e.data.on; iconePlein(); } });
   const iconePlein = () => { $('#plein-ic').innerHTML = ICONES[ecranPlein() ? 'sortir' : 'plein']; $('#plein').setAttribute('aria-label', ecranPlein() ? 'Exit full screen' : 'Full screen'); };
   $('#plein').addEventListener('click', e => { e.stopPropagation(); plein(); });
   document.addEventListener('fullscreenchange', iconePlein); iconePlein();
