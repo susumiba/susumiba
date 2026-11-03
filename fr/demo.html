@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Démo n° 22</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Susumiba, démo n° 22 : on ouvre dans la vraie session de Claude, qui recule et devient la session de Nora ; le projet commun, Léa au travail, le Greffier et les autres médiateurs, puis tous les humains et toutes les IA reliés.">
+<link rel="stylesheet" href="/fonts/polices.css">
+<style>
+/* démo n° 22 : la n° 21 au rythme de lecture réel (repères mesurés, voir RYTHME), bande de sous-titre ajustée au texte et translucide, réseau final irrégulier. (n° 21 :) la version B de la n° 20 (un seul sous-titre), ouverte par la fenêtre de Claude de la A, qui recule jusqu'à la place de la session abstraite. (anciennement : démo n° 20, version B, le sous-titre) : une vidéo en 16:9 avec un seul texte à lire, un gros sous-titre ; le reste est à regarder (sessions abstraites, bonshommes, étiquettes d'outils en texte, jamais de logo). Le lecteur est dans l'image, comme une vidéo. */
+:root{
+  color-scheme:dark;
+  --fond:#281A14; --creux:#1C3032; --texte:#E3E2DB; --texte-doux:#ADB3AE; --coquille:#FBF7F0;
+  --feuille:#EFECE2; --encre:#1E231F; --encre-douce:#6A706B; --laque:#2E2420; --nuit:#1E1511;
+  --sceau:#8A3835; --sceau-texte:#A23B32; --nora:#E9B48E; --thomas:#8EC3E6; --marc:#9FD0C4; --jonas:#A6C98E; --lea:#B3A8E0; --hugo:#E7C77F;
+  /* Claude, thème clair */
+  --cl-fond:#FAF9F5; --cl-rail:#F5F4EE; --cl-moi:#F0EEE6; --cl-trait:rgba(31,30,29,.13); --cl-encre:#141413; --cl-doux:#73726C; --cl-orange:#C6613F;
+  /* ChatGPT, thème clair */
+  --gp-fond:#FFFFFF; --gp-rail:#F9F9F9; --gp-moi:#F4F4F4; --gp-encre:#0D0D0D; --gp-doux:#8F8F8F;
+  --ombre-portee:0 24px 48px rgba(0,0,0,.45);
+  --f-titre:"Kaisei Tokumin", "Hiragino Mincho ProN", Georgia, serif;
+  --f-texte:"Zen Maru Gothic", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
+  --f-fixe:"BIZ UDGothic", ui-monospace, Menlo, monospace;
+  --f-appli:system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --f-reponse:Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --entre:cubic-bezier(.2,.7,.1,1); --sursaut:cubic-bezier(.34,1.56,.64,1); --aspire:cubic-bezier(.65,0,.35,1);
+  --geste:180ms; --apparait:400ms; --recul:1000ms; --entree:1200ms;
+  --grain-papier:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .12  0 0 0 0 .14  0 0 0 0 .1  0 0 0 1.4 -.45'/></filter><rect width='100%' height='100%' filter='url(%23g)' opacity='.1'/></svg>");
+}
+*{box-sizing:border-box}
+html{background:var(--fond)}
+body{margin:0; background:var(--fond); color:var(--texte); font:400 17px/1.6 var(--f-texte); -webkit-font-smoothing:antialiased; overflow-x:clip}
+h1,h2,h3,p{margin:0}
+button{font:inherit; color:inherit}
+:focus-visible{outline:2px solid #8FCBEF; outline-offset:3px}
+.page{position:relative; max-width:1336px; margin:0 auto; padding-block:20px 40px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
+@media (min-width:1024px){ .page{padding-left:max(48px, env(safe-area-inset-left, 0px)); padding-right:max(48px, env(safe-area-inset-right, 0px))} }
+.tete{max-width:1240px; margin:0 auto}
+.tete h2{font:500 clamp(24px, 2.6vw, 34px)/1.15 var(--f-titre); color:var(--coquille); letter-spacing:-.01em; text-wrap:balance}
+.choix{max-width:1240px; margin:10px auto 0; display:flex; flex-wrap:wrap; align-items:center; gap:6px}
+.choix-nom{font:400 12px/1 var(--f-fixe); letter-spacing:.08em; text-transform:uppercase; color:var(--texte-doux); margin-right:4px}
+.choix button{appearance:none; border:0; border-radius:14px; background:var(--creux); padding:6px 10px; min-width:30px; color:var(--texte-doux); font:400 12.5px/1 var(--f-fixe); cursor:pointer}
+.choix button[aria-pressed="true"]{background:#4FB08A; color:#0E2219; font-weight:700}
+.choix .sep{width:18px}
+.raison{max-width:1240px; margin:6px auto 0; min-height:1.4em; font:400 12.5px/1.4 var(--f-fixe); color:var(--texte-doux)}
+
+/* ===== la vidéo : un plateau de 1600 × 900, toujours en 16:9 ===== */
+.scene:focus-visible{outline:none}
+.scene:fullscreen{max-width:none; max-height:none; width:100vw; height:100vh; aspect-ratio:auto; border-radius:0; margin:0}
+.scene{position:relative; margin:18px auto 0; max-width:1240px; aspect-ratio:16 / 9; max-height:calc(100vh - 150px); border-radius:10px; overflow:hidden; background:#000; box-shadow:var(--ombre-portee); cursor:pointer; user-select:none; -webkit-user-select:none}
+.plateau{position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin:0 0; transform:translate(var(--dx, 0), var(--dy, 0)) scale(var(--k, 1)); background:var(--feuille) var(--grain-papier); color:var(--encre); overflow:hidden}
+.m{display:none} .m.on{display:block} .m:not(.on){display:none !important}
+.fil .outil.on, .fil .reflexion.on, .fil .carte-doc.on{display:flex}
+.vi{display:none} .vi.on{display:inline}
+.on.arrive{animation:entre var(--apparait) var(--entre) both}
+@keyframes entre{ from{opacity:0; transform:translateY(8px)} }
+.tape::after{content:""; display:inline-block; width:2px; height:1.1em; margin-left:2px; vertical-align:-.18em; background:currentColor}
+.saut *, .saut *::before, .saut *::after{transition:none !important; animation:none !important}
+.ic{width:1em; height:1em; flex:none; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+
+/* ===== Claude : la session de Nora ===== */
+.cl{position:absolute; inset:0; z-index:5; overflow:hidden; background:rgba(250,249,245,var(--bg, 1)); color:var(--cl-encre); font-family:var(--f-appli); left:0; top:0; width:1600px; height:900px; transform-origin:0 0}
+.cl-rail{position:absolute; left:0; top:0; bottom:0; width:76px; display:flex; flex-direction:column; align-items:center; gap:22px; padding-top:24px; background:var(--cl-rail); box-shadow:inset -1px 0 0 var(--cl-trait); color:var(--cl-doux); font-size:28px}
+.cl-rail .nouveau{width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:var(--cl-orange); color:#fff; font-size:22px; margin:6px 0 4px}
+.cl-rail .moi{margin-top:auto; margin-bottom:22px; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:#E3DFD3; color:#3D3D3A; font:600 19px/1 var(--f-appli)}
+.cl-haut{position:absolute; left:76px; right:0; top:0; height:74px; display:flex; align-items:center; justify-content:space-between; padding:0 34px; font:400 22px/1 var(--f-appli); color:#3D3D3A}
+.cl-haut .chemin{display:flex; align-items:center; gap:12px; white-space:nowrap}
+.cl-haut .chemin .projet-nom{color:var(--cl-doux)}
+.cl-haut .chemin .sep{color:#B7B5AC}
+.cl-haut .chemin .ic{font-size:18px; color:var(--cl-doux)}
+.cl-haut .partager{padding:9px 20px; border-radius:12px; box-shadow:inset 0 0 0 1px var(--cl-trait); font-size:20px}
+.cl-accueil{position:absolute; left:76px; right:0; top:210px; text-align:center; font:400 64px/1.1 var(--f-reponse); color:#3D3D3A; letter-spacing:-.01em; transition:opacity var(--apparait) var(--entre)}
+.cl-accueil small{display:block; margin-top:14px; font:400 21px/1 var(--f-appli); color:var(--cl-doux); letter-spacing:0}
+.scene:not(.neuf) .cl-accueil{opacity:0}
+/* le fil de la conversation */
+.fil{position:absolute; left:318px; width:1040px; top:88px; bottom:196px; display:flex; flex-direction:column; justify-content:flex-start; gap:22px; overflow:hidden}
+.scene.neuf .fil{opacity:0}
+.fil .moi{align-self:flex-end; max-width:82%; padding:14px 22px; border-radius:20px; background:var(--cl-moi); font:400 26px/1.4 var(--f-appli)}
+.fil .ia{font:400 27px/1.45 var(--f-reponse); color:var(--cl-encre)}
+.fil .ia b{font-weight:700}
+.fil .outil{display:flex; align-items:center; gap:10px; font:400 20px/1.3 var(--f-appli); color:var(--cl-doux)}
+.reflexion{display:flex; gap:7px; padding:10px 2px}
+.reflexion i{width:11px; height:11px; border-radius:50%; background:var(--cl-orange); animation:pense 900ms ease-in-out infinite}
+.reflexion i:nth-child(2){animation-delay:150ms} .reflexion i:nth-child(3){animation-delay:300ms}
+@keyframes pense{ 0%,100%{opacity:.25; transform:scale(.8)} 50%{opacity:1; transform:none} }
+.outil .tourne{width:16px; height:16px; border-radius:50%; border:2px solid #D9D6CB; border-top-color:var(--cl-orange); animation:tourne 800ms linear infinite}
+@keyframes tourne{ to{transform:rotate(360deg)} }
+/* la réponse d'ouverture : la ligne rouge, puis les tampons */
+.compte{font:400 34px/1.3 var(--f-reponse); color:var(--sceau-texte); opacity:0; transform:translateY(10px); transition:opacity var(--apparait) var(--entre), transform var(--apparait) var(--entre), color 600ms var(--entre)}
+.compte.on{opacity:1; transform:none}
+.compte.calme{color:var(--cl-encre)}
+.lignes{display:flex; flex-direction:column; gap:18px; margin-top:4px}
+.lg{display:grid; grid-template-columns:280px 1fr; align-items:baseline; gap:20px}
+.lg .nom{display:flex; align-items:baseline; gap:10px; font:700 28px/1.2 var(--f-appli); color:var(--cl-encre); opacity:0; transform:scale(1.18); transform-origin:0 50%; transition:opacity var(--geste) var(--sursaut), transform var(--geste) var(--sursaut), color var(--apparait) var(--entre)}
+.lg .nom::before{content:""; flex:none; width:13px; height:13px; border-radius:50%; background:var(--c); transform:translateY(-2px)}
+.lg .nom small{font-weight:400; color:var(--cl-doux); font-size:21px}
+.lg .nom.on{opacity:1; transform:none}
+.lg .nom.rouge{color:var(--sceau-texte)}
+.lg .res{font:400 27px/1.35 var(--f-reponse); opacity:0; transform:translateX(10px); transition:opacity var(--apparait) var(--entre), transform var(--apparait) var(--entre)}
+.lg .res.on{opacity:1; transform:none}
+.lg .res b{font-weight:700}
+.rouge-mot{transition:color var(--apparait) var(--entre)} .rouge-mot.on{color:var(--sceau-texte)}
+/* la carte de l'artefact dans le fil */
+.carte-doc{display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:14px; background:#fff; box-shadow:inset 0 0 0 1px var(--cl-trait); font:500 19px/1.25 var(--f-appli)}
+.carte-doc .ic{font-size:30px; padding:6px; border-radius:9px; background:var(--cl-moi); color:#3D3D3A; box-sizing:content-box}
+.carte-doc small{display:block; font-weight:400; font-size:16px; color:var(--cl-doux)}
+/* la barre de saisie, comme dans l'appli */
+.saisie{position:absolute; left:318px; width:1040px; top:722px; height:144px; display:flex; flex-direction:column; justify-content:space-between; padding:22px 24px 16px; border-radius:24px; background:#fff; box-shadow:0 0 0 1px var(--cl-trait), 0 6px 30px rgba(20,20,19,.06); font:400 26px/1.35 var(--f-appli); color:var(--cl-doux); transition:transform var(--apparait) var(--entre)}
+.scene.neuf .saisie{transform:translateY(-372px) scale(1.08)}
+.saisie .texte{min-height:1.35em}
+.saisie:has(.ecrit.on) .indice{display:none}
+.saisie .ecrit{display:none; color:var(--cl-encre)} .saisie .ecrit.on{display:inline}
+.outils{display:flex; align-items:center; gap:16px; color:#3D3D3A; font-size:21px}
+.outils .plus{width:42px; height:42px; border-radius:12px; display:grid; place-items:center; box-shadow:inset 0 0 0 1px var(--cl-trait); font-size:22px}
+.outils .modele{margin-left:auto; display:flex; align-items:center; gap:6px; color:#3D3D3A; font-size:20px}
+.outils .modele .ic{font-size:16px; color:var(--cl-doux)}
+.outils .micro{font-size:24px; color:#3D3D3A}
+.outils .envoyer{width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:#E9C4B5; color:#fff; font-size:22px; transition:background-color var(--geste) var(--entre)}
+.saisie.plein .envoyer{background:var(--cl-orange)}
+
+.marque-cl{font:500 27px/1 var(--f-reponse); color:#141413; letter-spacing:-.01em}
+.lg .nom{padding:3px 12px 5px; border-radius:10px; background:color-mix(in srgb, var(--c) 60%, transparent); justify-self:start}
+.lg .nom::before{display:none}
+.lg .nom small{color:#4F4D47}
+
+/* n° 21 : la fenêtre recule jusqu'à la session abstraite ; tout est piloté par x (voir rendu) */
+.cl-in{position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin:0 0}
+.cl .cl-rail, .cl .cl-haut, .cl .saisie, .cl .lg .nom small, .cl .fil .moi.on, .cl .compte.on, .cl .lg .res.on, .cl .reflexion.on{opacity:var(--tx, 1)}
+.cl .lg .nom.on{opacity:var(--tp, 1)}
+.cl.mv *{transition:none !important}
+.ses-in{position:absolute; left:0; top:0; right:0; bottom:0}
+.ombre{position:absolute; left:50px; top:80px; width:640px; height:460px; border-radius:22px; box-shadow:0 22px 50px rgba(30,35,31,.16), 0 2px 8px rgba(30,35,31,.1); opacity:0; pointer-events:none}
+
+
+/* ===== le visuel : à regarder, pas à lire (seuls les prénoms et les noms d'outils se lisent) ===== */
+.vis{position:absolute; inset:0; z-index:2; transform-origin:940px 310px; transition:opacity var(--recul) var(--aspire), transform var(--recul) var(--aspire)}
+.scene.nuage .vis{opacity:0; transform:scale(.6)}
+#fils{position:absolute; left:0; top:0; width:1600px; height:900px; z-index:1; pointer-events:none}
+/* un seul point focal : le reste reste visible, atténué */
+.ap{opacity:0; transition:opacity var(--apparait) var(--entre), transform var(--apparait) var(--entre)}
+.ap.on{opacity:.35} .ap.on.foc{opacity:1}
+.pill{display:inline-flex; align-items:center; gap:6px; padding:3px 14px 4px; border-radius:999px; background:var(--c); color:#1E231F; font:700 20px/1.25 var(--f-texte); white-space:nowrap}
+.pill .ic{font-size:.9em; stroke-width:2.4}
+.tag{display:inline-block; padding:3px 11px 4px; border-radius:8px; background:#E4E0D3; color:#4A4F4B; font:600 17px/1.25 var(--f-appli); white-space:nowrap}
+
+/* la session abstraite de Nora, aux codes de Claude */
+.ses{position:absolute; left:50px; top:80px; width:640px; height:460px; border-radius:22px; background:#FAF9F5; overflow:hidden}
+.ses-haut{position:absolute; left:0; right:0; top:0; height:56px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; box-shadow:inset 0 -1px 0 rgba(31,30,29,.08)}
+.conv{position:absolute; left:0; right:0; top:56px; bottom:0; overflow:hidden; -webkit-mask-image:linear-gradient(transparent 0, #000 40px); mask-image:linear-gradient(transparent 0, #000 40px)}
+.conv-in{position:absolute; left:0; right:0; top:0; padding:14px 24px 0; display:flex; flex-direction:column; gap:8px; transition:transform var(--apparait) var(--entre)}
+.ln{display:flex; gap:8px; height:12px}
+.w{display:block; flex:none; height:12px; border-radius:6px; background:#D9D6CB; transform:scaleX(var(--p, 0)); transform-origin:0 50%}
+.bulle{align-self:flex-end; width:380px; padding:13px 20px; border-radius:20px; background:#F0EEE6; flex-direction:column; gap:12px}
+.bulle.on{display:flex}
+.bulle .w{background:#B9B6AB}
+.ses .bulle .w, .ses .blk .w{--p:1}
+.pense{gap:8px; padding:6px 2px; height:30px; align-items:center}
+.pense.on{display:flex}
+.pense i{width:11px; height:11px; border-radius:50%; background:#C6613F; animation:pense 900ms ease-in-out infinite}
+.pense i:nth-child(2){animation-delay:150ms} .pense i:nth-child(3){animation-delay:300ms}
+.pense2{position:absolute; left:24px; bottom:14px; z-index:3; padding:8px 12px; border-radius:14px; background:#FAF9F5}
+@keyframes pense{ 0%,100%{opacity:.25; transform:scale(.8)} 50%{opacity:1; transform:none} }
+.blk{flex-direction:column; gap:6px}
+.blk.on{display:flex}
+.blk .pill{align-self:flex-start; font-size:17px; padding:1px 12px 2px}
+.docs{position:relative; height:236px; flex:none}
+.dc{position:absolute; left:0; top:0; width:290px; height:236px; padding:16px 20px; border-radius:14px; background:#fff; box-shadow:0 0 0 1px rgba(31,30,29,.1), 0 8px 22px rgba(31,30,29,.08); transition:transform var(--recul) var(--aspire), opacity var(--recul) var(--aspire)}
+.dc .ti{display:block; width:130px; height:14px; margin-bottom:18px; border-radius:7px; background:#BDB8AA}
+.rw{position:relative; display:flex; align-items:center; gap:10px; height:12px; margin-bottom:10px}
+.rw+.rw{margin-top:0}
+.sg{position:relative; flex:none; width:54px; height:12px; border-radius:6px; background:var(--c); transform:scaleX(var(--p, 0)); transform-origin:0 50%}
+.sg::after{content:""; position:absolute; inset:0; border-radius:6px; background:#A23B32; opacity:0; transition:opacity var(--apparait) var(--entre)}
+.sg.lum::after{opacity:1}
+.rw .pill{position:absolute; left:64px; top:-9px; z-index:2; font-size:17px; padding:1px 12px 2px; box-shadow:0 3px 10px rgba(31,30,29,.18)}
+.dA{transform:translateX(151px)}
+.rw .pill.nora{left:150px}
+
+/* le projet : un disque, avec dedans le sceau du Greffier */
+.disk{position:absolute; left:832px; top:202px; width:216px; height:216px; border-radius:50%; background:var(--coquille); box-shadow:0 0 0 3px rgba(30,35,31,.14), 0 18px 40px rgba(30,35,31,.16); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:9px}
+.disk.on{transition:opacity var(--apparait) var(--entre), transform var(--apparait) var(--entre)}
+.scene.grand .disk{transform:scale(1.2)}
+.disk b{font:500 42px/1 var(--f-titre); letter-spacing:-.01em}
+.disk .gl{font:600 16px/1 var(--f-appli); color:#6A706B}
+.sc{position:relative; width:46px; height:46px; border-radius:12px; display:grid; place-items:center; background:#9AA39B; color:#fff; font-size:28px}
+.sc::after{content:""; position:absolute; inset:0; border-radius:12px; background:#8A3835; opacity:0; transition:opacity var(--apparait) var(--entre)}
+.sc .ic{position:relative; z-index:1; stroke-width:1.7}
+.sc.lum::after{opacity:1}
+.sc{transition:transform var(--geste) var(--sursaut)}
+.sc.lum{transform:scale(1.14)}
+.sc.vide{background:none; box-shadow:none; border:2.5px dashed #9AA39B; color:#9AA39B}
+.sc.vide::after{display:none}
+.chip{position:absolute; top:48px; width:140px; display:flex; flex-direction:column; align-items:center; gap:8px}
+.chip .nm{font:600 18px/1 var(--f-appli); color:#3D423E; white-space:nowrap}
+
+/* les personnes : un bonhomme, une étiquette d'outil en texte */
+.pers{position:absolute; width:130px; display:flex; flex-direction:column; align-items:center}
+.pers .bonh{display:block; width:56px; height:52px; margin-top:6px}
+.pers .trait{width:2px; height:10px; background:#9AA39B}
+.term{position:absolute; left:880px; top:455px; width:160px; height:135px; border-radius:14px; background:#1B1F1D; overflow:hidden; box-shadow:0 14px 30px rgba(30,35,31,.3); transform:scale(.8); transform-origin:100% 100%}
+.term.on{transform:none}
+.term .tb{position:absolute; left:0; right:0; top:0; height:22px; padding:7px 10px; display:flex; gap:5px; background:#262B28; z-index:2}
+.term .tb i{width:7px; height:7px; border-radius:50%; background:#5F6B66}
+.term .tn{position:absolute; left:12px; right:8px; top:30px}
+.tl{display:flex; gap:6px; height:8px; margin-bottom:10px}
+.tl i{display:block; height:8px; border-radius:4px}
+.carte{position:absolute; left:0; top:0; z-index:4; width:84px; height:56px; margin:-28px 0 0 -42px; border-radius:6px; background:#fff; box-shadow:inset 5px 0 0 var(--lea), 0 8px 20px rgba(30,35,31,.25); opacity:0; pointer-events:none; background-image:linear-gradient(#D9D6CB, #D9D6CB), linear-gradient(#D9D6CB, #D9D6CB); background-repeat:no-repeat; background-size:46px 7px, 30px 7px; background-position:20px 16px, 20px 32px}
+
+/* le sous-titre : l'unique texte à lire, en bas de l'image */
+.stz{position:absolute; left:150px; width:1300px; bottom:120px; z-index:9; display:grid; justify-items:center; align-items:end; pointer-events:none}
+.st{grid-area:1 / 1; width:max-content; max-width:1300px; white-space:nowrap; padding:20px 38px 24px; border-radius:18px; background:rgba(24,16,13,.8); color:var(--coquille); font:500 44px/1.28 var(--f-titre); text-align:center; opacity:0; transform:translateY(12px)}
+.st.on{opacity:1; transform:none; transition:opacity 250ms var(--entre), transform 250ms var(--entre)}
+
+/* la fin */
+.fin .pile{display:grid; place-items:center; width:1500px; height:340px}
+.fin .pile > *{grid-area:1 / 1}
+.carton.fin .gros{font-size:62px}
+.fin .fin2{display:flex; flex-direction:column; align-items:center}
+.fin .marque{display:flex; align-items:center; gap:24px; margin-top:46px; font:500 62px/1 var(--f-titre); letter-spacing:.16em; color:var(--coquille); opacity:0; transform:translateY(8px); transition:opacity var(--apparait) var(--entre), transform var(--apparait) var(--entre)}
+.fin .marque.on{opacity:1; transform:none}
+.fin .marque .sceau{width:60px; height:60px}
+.fin .sous{font:500 62px/1.15 var(--f-titre); color:var(--coquille); opacity:0; transform:translateY(8px); transition:opacity var(--apparait) var(--entre), transform var(--apparait) var(--entre)}
+.fin .sous.on{opacity:1; transform:none}
+.fd{opacity:0; transition:opacity var(--apparait) var(--entre)}
+.fd.on{opacity:1}
+
+/* ===== le carton de fin ===== */
+.carton{position:absolute; inset:0; z-index:10; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:var(--nuit); color:var(--coquille); opacity:0; pointer-events:none; transition:opacity 300ms var(--entre)}
+.carton.on{opacity:1}
+.carton .gros{font:500 72px/1.15 var(--f-titre); letter-spacing:-.01em; opacity:0; transform:translateY(8px); transition:opacity 300ms var(--entre), transform 300ms var(--entre)}
+.carton .gros.on{opacity:1; transform:none}
+
+.sceau svg{display:block; width:100%; height:100%}
+
+/* ===== le lecteur, dans l'image ===== */
+.lecteur{position:absolute; left:0; right:0; bottom:0; z-index:20; padding:40px 16px 8px; background:linear-gradient(transparent, rgba(0,0,0,.55)); opacity:0; transition:opacity 250ms ease; cursor:default}
+.scene.montre .lecteur, .scene.arret .lecteur, .lecteur:focus-within{opacity:1}
+.piste{position:relative; height:16px; display:flex; align-items:center; gap:3px; cursor:pointer; touch-action:none}
+.seg{position:relative; flex:var(--w) 1 0; height:4px; border-radius:2px; background:rgba(255,255,255,.3); overflow:hidden; transition:height 120ms ease}
+.piste:hover .seg{height:7px}
+.seg i{position:absolute; inset:0; background:#E9584C; transform-origin:0 50%; transform:scaleX(var(--p, 0))}
+.curseur{position:absolute; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#E9584C; left:var(--x, 0%); transform:scale(.0); transition:transform 120ms ease; pointer-events:none}
+.scene.montre .curseur, .scene.arret .curseur, .piste:hover .curseur{transform:none}
+.commandes{display:flex; align-items:center; gap:14px; margin-top:4px; color:#fff; font:500 14px/1 var(--f-appli)}
+.commandes button{appearance:none; border:0; background:none; padding:6px; border-radius:6px; display:grid; place-items:center; cursor:pointer; color:#fff}
+.commandes button svg{width:22px; height:22px; fill:currentColor}
+.temps{font-variant-numeric:tabular-nums; opacity:.92}
+.commandes .plein{margin-left:auto}
+.chapitre{opacity:.85; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0}
+.chapitre::before{content:"·"; margin-right:10px; opacity:.7}
+.flash{position:absolute; left:50%; top:50%; z-index:21; width:76px; height:76px; margin:-38px 0 0 -38px; border-radius:50%; display:grid; place-items:center; background:rgba(0,0,0,.55); opacity:0; pointer-events:none}
+.flash svg{width:34px; height:34px; fill:#fff}
+.flash.va{animation:flash 650ms ease-out}
+@keyframes flash{ from{opacity:1; transform:scale(.8)} to{opacity:0; transform:scale(1.3)} }
+.saut-txt{position:absolute; top:50%; z-index:21; margin-top:-22px; padding:10px 16px; border-radius:22px; background:rgba(0,0,0,.55); color:#fff; font:600 15px/1 var(--f-appli); opacity:0; pointer-events:none}
+.saut-txt.g{left:12%} .saut-txt.d{right:12%}
+.saut-txt.va{animation:flash 650ms ease-out}
+.aide{max-width:1240px; margin:12px auto 0; font:400 12.5px/1.5 var(--f-fixe); color:var(--texte-doux)}
+@media (max-width:639px){ .commandes{gap:8px; margin-top:0; font-size:11px} .commandes button{padding:3px} .commandes button svg{width:17px; height:17px} .lecteur{padding:12px 8px 0; background:linear-gradient(transparent, rgba(0,0,0,.45))} .piste{height:12px} .scene{border-radius:8px} }
+@media (prefers-reduced-motion:reduce){ *{transition:none !important; animation:none !important} }
+/* ?nu : la vidéo seule, pour la page du site (dans un cadre en 16:9) */
+html.nu, html.nu body{background:#000; overflow:hidden}
+.nu .tete, .nu .choix, .nu .raison, .nu .aide{display:none}
+.nu .page{max-width:none; padding:0}
+.nu .scene{margin:0; max-width:none; max-height:100vh; border-radius:0; box-shadow:none}
+</style>
+
+<main class="page">
+  <header class="tete"><h2 id="titre">Fini le copier-coller entre vos IA.</h2></header>
+  <div class="choix" id="choix" role="group" aria-label="Titre à choisir"><span class="choix-nom">Titre</span></div>
+  <p class="raison" id="raison"></p>
+
+  <div class="scene" id="scene" role="region" aria-roledescription="vidéo" aria-label="Dans Claude, Nora demande ce qu'ont fait les autres pour l'annonce du lancement d'Orla : sa session lui liste cinq nouveautés, Hugo, Thomas, Marc, Jonas et Léa. La fenêtre recule et devient la session de Nora, reliée au projet commun, où les autres ont déposé leur travail. Léa travaille encore ; quand elle a fini, le projet apporte son résultat à Nora, qui retouche le passage. Au centre, des médiateurs : le Greffier, la Centrifugeuse, et les vôtres. Puis des humains et des IA, mêlés sans ordre, chacun avec ses IA, se relient tous à un projet commun." tabindex="0">
+    <div class="plateau" id="plateau">
+
+      <!-- Claude : la vraie fenêtre, en grand (0 à 9 s), puis elle recule jusqu'à la place de la session abstraite -->
+      <div class="cl" id="cl"><div class="cl-in" id="cl-in">
+        <nav class="cl-rail" aria-hidden="true">
+          <svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M9.5 4.5v15"/></svg>
+          <span class="nouveau"><svg class="ic" viewBox="0 0 24 24" style="stroke-width:2.2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <svg class="ic" viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17A2.5 2.5 0 0 1 4 14.5z"/></svg>
+          <svg class="ic" viewBox="0 0 24 24"><path d="M3.5 7.5A2 2 0 0 1 5.5 5.5h4l2 2.5h7a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/></svg>
+          <svg class="ic" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+          <span class="moi">N</span>
+        </nav>
+        <header class="cl-haut">
+          <span class="chemin"><span class="marque-cl">Claude</span><span class="sep">·</span><span class="projet-nom">Orla</span><span class="vi" data-t="2.6"><span class="sep">/</span> Annonce du lancement <svg class="ic" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></span>
+          <span class="partager">Partager</span>
+        </header>
+        <h1 class="cl-accueil">Orla<small>Projet partagé</small></h1>
+
+        <div class="fil" id="fil">
+          <p class="moi m" data-t="2.6">J'écris l'annonce du lancement d'Orla aux 12 000 inscrits. Qu'ont fait les autres ?</p>
+          <div class="reflexion m" data-t="2.7" data-jusqua="3.1"><i></i><i></i><i></i></div>
+          <div class="reponse">
+            <p class="compte" id="compte" data-t="3.1">Depuis ta dernière session, 5 nouveautés te concernent.</p>
+            <div class="lignes">
+              <div class="lg"><p class="nom" data-t="3.9" data-rouge="3.9,4.8" style="--c:var(--hugo)">Hugo <small>· direction</small></p><p class="res" data-t="4.0">A tranché : <b>3 mois offerts</b> aux inscrits, pas de prix le jour J.</p></div>
+              <div class="lg"><p class="nom" data-t="4.8" data-rouge="4.8,5.7" style="--c:var(--thomas)">Thomas <small>· finance</small></p><p class="res" data-t="4.9">A chiffré les 3 mois : <b>11 000 €</b>, ça tient.</p></div>
+              <div class="lg"><p class="nom" data-t="5.7" data-rouge="5.7,6.6" style="--c:var(--marc)">Marc <small>· publicité</small></p><p class="res" data-t="5.8">A testé 3 accroches : <b>« Une nuit, et tout est rangé »</b> gagne.</p></div>
+              <div class="lg"><p class="nom" data-t="6.6" data-rouge="6.6,7.5" style="--c:var(--jonas)">Jonas <small>· support</small></p><p class="res" data-t="6.7">A formé 6 personnes et écrit <b>20 réponses</b> aux inscrits.</p></div>
+              <div class="lg"><p class="nom" data-t="7.5" data-rouge="7.5,8.4" style="--c:var(--lea)">Léa <small>· produit</small></p><p class="res" data-t="7.6">En session depuis 9 h : finit les <b>tests Android</b>.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="saisie" id="saisie">
+          <p class="texte"><span class="indice vi" data-t="0" data-jusqua="2.6">Comment puis-je vous aider aujourd'hui ?</span><span class="indice vi" data-t="2.6">Répondre…</span><span class="ecrit" data-t=".3" data-jusqua="2.6" data-cps="40" data-txt="J'écris l'annonce du lancement d'Orla aux 12 000 inscrits. Qu'ont fait les autres ?"></span></p>
+          <div class="outils">
+            <span class="plus"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+            <span class="modele">Opus 5.5 <svg class="ic" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
+            <span class="micro"><svg class="ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span>
+            <span class="envoyer"><svg class="ic" viewBox="0 0 24 24" style="stroke-width:2.2"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span>
+          </div>
+        </div>
+      </div></div>
+
+      <canvas id="fils" width="3200" height="1800" aria-hidden="true"></canvas>
+
+      <div class="vis" id="vis" aria-hidden="true">
+        <!-- la session abstraite de Nora (la fenêtre de Claude vient s'y poser entre 9 et 10 s) -->
+        <div class="ombre" id="ombre"></div>
+        <div class="ses ap" data-t="9" data-foc="9,10.9 11.2,11.8 12.05,12.65 12.9,13.5 17.5,21 22.6,28.5">
+          <div class="ses-in" id="ses-in">
+          <div class="ses-haut"><span class="pill" style="--c:var(--nora)">Nora</span><span class="tag">Claude</span></div>
+          <div class="conv" id="conv"><div class="conv-in" id="conv-in">
+          <div class="bulle m" data-t="9"><div class="ln"><i class="w" style="width:60px;background:#B9B6AB"></i><i class="w" style="width:38px;background:#B9B6AB"></i><i class="w" style="width:86px;background:#B9B6AB"></i><i class="w" style="width:52px;background:#B9B6AB"></i><i class="w" style="width:72px;background:#B9B6AB"></i></div><div class="ln"><i class="w" style="width:74px;background:#B9B6AB"></i><i class="w" style="width:46px;background:#B9B6AB"></i><i class="w" style="width:92px;background:#B9B6AB"></i><i class="w" style="width:58px;background:#B9B6AB"></i></div></div>
+          <div class="blk m" data-t="9"><span class="pill" style="--c:var(--hugo)">Hugo</span><div class="ln"><i class="w" style="width:70px"></i><i class="w" style="width:42px"></i><i class="w" style="width:96px"></i><i class="w" style="width:58px"></i><i class="w" style="width:80px"></i></div><div class="ln"><i class="w" style="width:54px"></i><i class="w" style="width:88px"></i><i class="w" style="width:40px"></i><i class="w" style="width:64px"></i></div></div>
+          <div class="blk m" data-t="9"><span class="pill" style="--c:var(--thomas)">Thomas</span><div class="ln"><i class="w" style="width:80px"></i><i class="w" style="width:50px"></i><i class="w" style="width:70px"></i><i class="w" style="width:90px"></i><i class="w" style="width:46px"></i></div><div class="ln"><i class="w" style="width:60px"></i><i class="w" style="width:96px"></i><i class="w" style="width:44px"></i></div></div>
+          <div class="blk m" data-t="9"><span class="pill" style="--c:var(--marc)">Marc</span><div class="ln"><i class="w" style="width:64px"></i><i class="w" style="width:90px"></i><i class="w" style="width:52px"></i><i class="w" style="width:78px"></i><i class="w" style="width:40px"></i></div><div class="ln"><i class="w" style="width:86px"></i><i class="w" style="width:48px"></i><i class="w" style="width:70px"></i><i class="w" style="width:58px"></i></div></div>
+          <div class="blk m" data-t="9"><span class="pill" style="--c:var(--jonas)">Jonas</span><div class="ln"><i class="w" style="width:92px"></i><i class="w" style="width:44px"></i><i class="w" style="width:68px"></i><i class="w" style="width:84px"></i><i class="w" style="width:50px"></i></div><div class="ln"><i class="w" style="width:50px"></i><i class="w" style="width:74px"></i><i class="w" style="width:96px"></i></div></div>
+          <div class="blk m" data-t="9"><span class="pill" style="--c:var(--lea)">Léa</span><div class="ln"><i class="w" style="width:58px"></i><i class="w" style="width:86px"></i><i class="w" style="width:46px"></i><i class="w" style="width:72px"></i><i class="w" style="width:90px"></i></div><div class="ln"><i class="w" style="width:66px"></i><i class="w" style="width:40px"></i><i class="w" style="width:84px"></i><i class="w" style="width:52px"></i></div></div>
+          <div class="docs m" data-t="16.8"><div class="dc dA"><i class="ti"></i>
+<div class="rw"><i class="sg" style="--c:var(--hugo)" data-fill="17.55,18.05"></i><div class="ln"><i class="w" data-fill="17.65,17.95" style="width:120px"></i><i class="w" data-fill="17.95,18.25" style="width:60px"></i></div></div>
+<div class="rw"><i class="sg" style="--c:var(--thomas)" data-fill="18.45,18.95"></i><div class="ln"><i class="w" data-fill="18.55,18.85" style="width:96px"></i><i class="w" data-fill="18.85,19.15" style="width:70px"></i></div></div>
+<div class="rw"><i class="sg" style="--c:var(--marc)" data-fill="19.35,19.85"></i><div class="ln"><i class="w" data-fill="19.45,19.75" style="width:134px"></i><i class="w" data-fill="19.75,20.05" style="width:40px"></i></div></div>
+<div class="rw"><i class="sg" style="--c:var(--jonas)" data-fill="20.25,20.75"></i><div class="ln"><i class="w" data-fill="20.35,20.65" style="width:84px"></i><i class="w" data-fill="20.65,20.95" style="width:80px"></i></div></div>
+<div class="rw"><i class="sg" style="--c:var(--lea)" data-fill="20.95,21.45" data-lum="23.9,26.4"></i><div class="ln"><i class="w" data-fill="21.05,21.35" style="width:110px"></i><i class="w" data-fill="21.35,21.65" style="width:52px"></i><i class="w" data-fill="25.1,25.6" style="width:44px;background:var(--nora)"></i></div><span class="pill fd" style="--c:var(--lea)" data-t="24" data-jusqua="26">Léa</span><span class="pill nora fd" style="--c:var(--nora)" data-t="24.9" data-jusqua="26">Nora</span></div>
+<div class="rw"><div class="ln"><i class="w" data-fill="21.60,22.05" style="width:150px"></i><i class="w" data-fill="22.05,22.50" style="width:70px"></i></div></div>
+</div>
+</div>
+          </div>
+          </div>
+          </div>
+        </div>
+
+        <!-- le projet -->
+        <div class="disk ap" data-t="9.3" data-foc="9.3,9.8 21.8,22.7 28.5,38.5">
+          <b>Orla</b>
+          <span class="sc" data-lum="28.7,38.5"><svg class="ic" viewBox="0 0 24 24"><path d="M15.5 4.5l4 4L9 19H5v-4z"/><path d="M13.5 6.5l4 4"/></svg></span>
+          <span class="gl">Greffier</span>
+        </div>
+        <div class="chip ap" data-t="33.6" data-foc="33.5,38.5" style="left:805px"><span class="sc" data-lum="33.7,35"> <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 5v4M19 12h-4M12 19v-4M5 12h4"/></svg></span><span class="nm">Centrifugeuse</span></div>
+        <div class="chip ap" data-t="35.3" data-foc="35.2,38.5" style="left:945px"><span class="sc vide"><svg class="ic" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></span><span class="nm">+ les vôtres</span></div>
+
+        <!-- les personnes -->
+        <div class="pers ap" data-t="9.35" data-foc="9.8,10.4 16.6,17.2" style="left:1185px; top:52px"><span class="pill" style="--c:var(--hugo)">Hugo</span><svg class="bonh" viewBox="0 0 56 52" aria-hidden="true"><circle cx="28" cy="13" r="12" fill="#9AA39B"/><path d="M6 51a22 22 0 0 1 44 0z" fill="#9AA39B"/></svg><i class="trait"></i><span class="tag">Claude</span></div>
+        <div class="pers ap" data-t="9.45" data-foc="10.65,11.25 17.5,18.1" style="left:1405px; top:152px"><span class="pill" style="--c:var(--thomas)">Thomas</span><svg class="bonh" viewBox="0 0 56 52" aria-hidden="true"><circle cx="28" cy="13" r="12" fill="#9AA39B"/><path d="M6 51a22 22 0 0 1 44 0z" fill="#9AA39B"/></svg><i class="trait"></i><span class="tag">ChatGPT</span></div>
+        <div class="pers ap" data-t="9.55" data-foc="11.5,12.1 18.4,19.0" style="left:1435px; top:322px"><span class="pill" style="--c:var(--marc)">Marc</span><svg class="bonh" viewBox="0 0 56 52" aria-hidden="true"><circle cx="28" cy="13" r="12" fill="#9AA39B"/><path d="M6 51a22 22 0 0 1 44 0z" fill="#9AA39B"/></svg><i class="trait"></i><span class="tag">Mistral</span></div>
+        <div class="pers ap" data-t="9.65" data-foc="12.35,12.95 19.3,19.9" style="left:1375px; top:472px"><span class="pill" style="--c:var(--jonas)">Jonas</span><svg class="bonh" viewBox="0 0 56 52" aria-hidden="true"><circle cx="28" cy="13" r="12" fill="#9AA39B"/><path d="M6 51a22 22 0 0 1 44 0z" fill="#9AA39B"/></svg><i class="trait"></i><span class="tag">DeepSeek</span></div>
+        <div class="pers ap" data-t="9.75" data-foc="13,16.5 21,22.4" style="left:1065px; top:472px"><span class="pill" style="--c:var(--lea)">Léa</span><svg class="bonh" viewBox="0 0 56 52" aria-hidden="true"><circle cx="28" cy="13" r="12" fill="#9AA39B"/><path d="M6 51a22 22 0 0 1 44 0z" fill="#9AA39B"/></svg><i class="trait"></i><span class="tag">Codex</span></div>
+        <div class="term ap" data-t="13.2" data-foc="13,16.5 21,22.4"><div class="tb"><i></i><i></i><i></i></div><div class="tn" id="tn"><div class="tl" style="padding-left:12px"><i style="width:46px;background:#9FD0C4"></i><i style="width:59px;background:#9FD0C4"></i><i style="width:16px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:38px;background:#5F6B66"></i><i style="width:35px;background:#E9B48E"></i><i style="width:50px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:34px;background:#B3A8E0"></i><i style="width:44px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:35px;background:#5F6B66"></i><i style="width:57px;background:#5F6B66"></i><i style="width:29px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:53px;background:#5F6B66"></i><i style="width:28px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:42px;background:#9FD0C4"></i><i style="width:59px;background:#A6C98E"></i><i style="width:59px;background:#5F6B66"></i><i style="width:33px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:39px;background:#9FD0C4"></i><i style="width:27px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:48px;background:#8EC3E6"></i><i style="width:36px;background:#E9B48E"></i><i style="width:67px;background:#B3A8E0"></i><i style="width:38px;background:#E7C77F"></i></div><div class="tl" style="padding-left:12px"><i style="width:35px;background:#5F6B66"></i><i style="width:28px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:24px"><i style="width:20px;background:#8EC3E6"></i><i style="width:47px;background:#9FD0C4"></i><i style="width:19px;background:#E7C77F"></i></div><div class="tl" style="padding-left:24px"><i style="width:59px;background:#E9B48E"></i><i style="width:35px;background:#5F6B66"></i><i style="width:44px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:12px"><i style="width:12px;background:#5F6B66"></i><i style="width:28px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:53px;background:#9FD0C4"></i><i style="width:40px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:12px"><i style="width:61px;background:#5F6B66"></i><i style="width:45px;background:#9FD0C4"></i><i style="width:44px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:12px"><i style="width:48px;background:#5F6B66"></i><i style="width:51px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:66px;background:#E7C77F"></i><i style="width:63px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:12px"><i style="width:15px;background:#E7C77F"></i><i style="width:49px;background:#B3A8E0"></i><i style="width:47px;background:#A6C98E"></i><i style="width:52px;background:#E7C77F"></i></div><div class="tl" style="padding-left:12px"><i style="width:33px;background:#A6C98E"></i><i style="width:57px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:36px;background:#5F6B66"></i><i style="width:43px;background:#E9B48E"></i><i style="width:47px;background:#8EC3E6"></i><i style="width:39px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:24px"><i style="width:15px;background:#8EC3E6"></i><i style="width:67px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:24px"><i style="width:63px;background:#5F6B66"></i><i style="width:14px;background:#A6C98E"></i><i style="width:45px;background:#B3A8E0"></i><i style="width:35px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:37px;background:#E7C77F"></i><i style="width:35px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:44px;background:#E7C77F"></i><i style="width:66px;background:#E7C77F"></i><i style="width:36px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:43px;background:#E9B48E"></i><i style="width:12px;background:#A6C98E"></i><i style="width:21px;background:#5F6B66"></i><i style="width:19px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:58px;background:#E9B48E"></i><i style="width:57px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:12px"><i style="width:24px;background:#8EC3E6"></i><i style="width:31px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:12px"><i style="width:52px;background:#9FD0C4"></i><i style="width:54px;background:#E9B48E"></i><i style="width:33px;background:#5F6B66"></i><i style="width:24px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:12px;background:#9FD0C4"></i><i style="width:66px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:15px;background:#9FD0C4"></i><i style="width:55px;background:#E7C77F"></i><i style="width:67px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:63px;background:#5F6B66"></i><i style="width:33px;background:#B3A8E0"></i><i style="width:36px;background:#8EC3E6"></i><i style="width:22px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:42px;background:#9FD0C4"></i><i style="width:24px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:27px;background:#8EC3E6"></i><i style="width:36px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:19px;background:#5F6B66"></i><i style="width:44px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:43px;background:#9FD0C4"></i><i style="width:26px;background:#9FD0C4"></i><i style="width:64px;background:#E7C77F"></i><i style="width:38px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:47px;background:#8EC3E6"></i><i style="width:17px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:36px;background:#5F6B66"></i><i style="width:45px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:54px;background:#5F6B66"></i><i style="width:30px;background:#E9B48E"></i><i style="width:16px;background:#A6C98E"></i><i style="width:41px;background:#E9B48E"></i></div><div class="tl" style="padding-left:24px"><i style="width:63px;background:#A6C98E"></i><i style="width:62px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:12px"><i style="width:55px;background:#5F6B66"></i><i style="width:36px;background:#A6C98E"></i><i style="width:29px;background:#E9B48E"></i><i style="width:51px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:35px;background:#5F6B66"></i><i style="width:36px;background:#5F6B66"></i><i style="width:53px;background:#8EC3E6"></i><i style="width:17px;background:#A6C98E"></i></div><div class="tl" style="padding-left:24px"><i style="width:26px;background:#E9B48E"></i><i style="width:28px;background:#E7C77F"></i></div><div class="tl" style="padding-left:24px"><i style="width:46px;background:#5F6B66"></i><i style="width:42px;background:#5F6B66"></i><i style="width:42px;background:#B3A8E0"></i><i style="width:28px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:36px;background:#E9B48E"></i><i style="width:41px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:28px;background:#8EC3E6"></i><i style="width:61px;background:#B3A8E0"></i><i style="width:17px;background:#9FD0C4"></i><i style="width:37px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:33px;background:#5F6B66"></i><i style="width:35px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:46px;background:#8EC3E6"></i><i style="width:32px;background:#9FD0C4"></i><i style="width:56px;background:#E9B48E"></i></div><div class="tl" style="padding-left:24px"><i style="width:47px;background:#A6C98E"></i><i style="width:16px;background:#A6C98E"></i><i style="width:24px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:15px;background:#5F6B66"></i><i style="width:53px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:24px;background:#5F6B66"></i><i style="width:38px;background:#8EC3E6"></i><i style="width:14px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:12px"><i style="width:12px;background:#5F6B66"></i><i style="width:63px;background:#A6C98E"></i><i style="width:31px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:35px;background:#5F6B66"></i><i style="width:55px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:29px;background:#9FD0C4"></i><i style="width:48px;background:#E9B48E"></i><i style="width:34px;background:#E9B48E"></i><i style="width:37px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:24px"><i style="width:29px;background:#E9B48E"></i><i style="width:15px;background:#E9B48E"></i><i style="width:19px;background:#E9B48E"></i></div><div class="tl" style="padding-left:24px"><i style="width:52px;background:#A6C98E"></i><i style="width:65px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:12px;background:#5F6B66"></i><i style="width:19px;background:#9FD0C4"></i><i style="width:59px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:34px;background:#9FD0C4"></i><i style="width:31px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:26px;background:#8EC3E6"></i><i style="width:28px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:41px;background:#E9B48E"></i><i style="width:54px;background:#5F6B66"></i><i style="width:22px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:12px"><i style="width:29px;background:#A6C98E"></i><i style="width:47px;background:#E7C77F"></i></div><div class="tl" style="padding-left:12px"><i style="width:22px;background:#A6C98E"></i><i style="width:25px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:30px;background:#9FD0C4"></i><i style="width:30px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:28px;background:#E9B48E"></i><i style="width:35px;background:#5F6B66"></i><i style="width:33px;background:#5F6B66"></i><i style="width:21px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:15px;background:#5F6B66"></i><i style="width:60px;background:#E7C77F"></i><i style="width:12px;background:#A6C98E"></i><i style="width:39px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:12px"><i style="width:49px;background:#9FD0C4"></i><i style="width:23px;background:#5F6B66"></i><i style="width:66px;background:#E9B48E"></i><i style="width:18px;background:#E7C77F"></i></div><div class="tl" style="padding-left:12px"><i style="width:57px;background:#5F6B66"></i><i style="width:15px;background:#E7C77F"></i></div><div class="tl" style="padding-left:24px"><i style="width:45px;background:#B3A8E0"></i><i style="width:20px;background:#E9B48E"></i><i style="width:43px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:65px;background:#A6C98E"></i><i style="width:25px;background:#9FD0C4"></i><i style="width:56px;background:#E7C77F"></i><i style="width:27px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:62px;background:#E7C77F"></i><i style="width:36px;background:#B3A8E0"></i><i style="width:34px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:30px;background:#A6C98E"></i><i style="width:65px;background:#A6C98E"></i><i style="width:12px;background:#9FD0C4"></i><i style="width:24px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:12px"><i style="width:20px;background:#5F6B66"></i><i style="width:12px;background:#8EC3E6"></i><i style="width:22px;background:#8EC3E6"></i><i style="width:12px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:48px;background:#9FD0C4"></i><i style="width:55px;background:#E7C77F"></i><i style="width:14px;background:#B3A8E0"></i><i style="width:18px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:19px;background:#5F6B66"></i><i style="width:38px;background:#5F6B66"></i><i style="width:52px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:12px;background:#B3A8E0"></i><i style="width:51px;background:#5F6B66"></i><i style="width:33px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:43px;background:#5F6B66"></i><i style="width:23px;background:#8EC3E6"></i><i style="width:30px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:24px"><i style="width:66px;background:#B3A8E0"></i><i style="width:32px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:26px;background:#8EC3E6"></i><i style="width:13px;background:#9FD0C4"></i><i style="width:23px;background:#9FD0C4"></i><i style="width:32px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:31px;background:#B3A8E0"></i><i style="width:27px;background:#A6C98E"></i><i style="width:57px;background:#A6C98E"></i><i style="width:43px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:12px"><i style="width:52px;background:#B3A8E0"></i><i style="width:38px;background:#5F6B66"></i><i style="width:19px;background:#E9B48E"></i></div><div class="tl" style="padding-left:24px"><i style="width:45px;background:#E9B48E"></i><i style="width:40px;background:#E9B48E"></i><i style="width:12px;background:#E7C77F"></i></div><div class="tl" style="padding-left:12px"><i style="width:33px;background:#E9B48E"></i><i style="width:44px;background:#E9B48E"></i><i style="width:58px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:42px;background:#9FD0C4"></i><i style="width:22px;background:#A6C98E"></i><i style="width:42px;background:#A6C98E"></i><i style="width:36px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:30px;background:#5F6B66"></i><i style="width:48px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:13px;background:#9FD0C4"></i><i style="width:65px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:38px;background:#8EC3E6"></i><i style="width:38px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:16px;background:#E9B48E"></i><i style="width:38px;background:#5F6B66"></i><i style="width:31px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:24px;background:#A6C98E"></i><i style="width:29px;background:#9FD0C4"></i><i style="width:55px;background:#5F6B66"></i><i style="width:23px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:12px"><i style="width:65px;background:#9FD0C4"></i><i style="width:59px;background:#E7C77F"></i><i style="width:15px;background:#5F6B66"></i><i style="width:47px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:29px;background:#E9B48E"></i><i style="width:50px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:12px"><i style="width:50px;background:#B3A8E0"></i><i style="width:16px;background:#5F6B66"></i><i style="width:20px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:24px"><i style="width:67px;background:#B3A8E0"></i><i style="width:31px;background:#5F6B66"></i><i style="width:53px;background:#E9B48E"></i><i style="width:60px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:27px;background:#B3A8E0"></i><i style="width:49px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:12px;background:#E9B48E"></i><i style="width:49px;background:#E9B48E"></i><i style="width:65px;background:#A6C98E"></i><i style="width:20px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:28px;background:#E9B48E"></i><i style="width:50px;background:#5F6B66"></i><i style="width:30px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:44px;background:#A6C98E"></i><i style="width:55px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:20px;background:#E9B48E"></i><i style="width:67px;background:#E9B48E"></i><i style="width:28px;background:#E7C77F"></i><i style="width:20px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:41px;background:#8EC3E6"></i><i style="width:44px;background:#5F6B66"></i><i style="width:65px;background:#5F6B66"></i><i style="width:28px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:61px;background:#8EC3E6"></i><i style="width:53px;background:#9FD0C4"></i><i style="width:59px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:50px;background:#9FD0C4"></i><i style="width:67px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:62px;background:#9FD0C4"></i><i style="width:47px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:41px;background:#A6C98E"></i><i style="width:24px;background:#9FD0C4"></i><i style="width:47px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:29px;background:#A6C98E"></i><i style="width:46px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:48px;background:#8EC3E6"></i><i style="width:25px;background:#E7C77F"></i><i style="width:37px;background:#A6C98E"></i></div><div class="tl" style="padding-left:24px"><i style="width:21px;background:#8EC3E6"></i><i style="width:62px;background:#A6C98E"></i></div><div class="tl" style="padding-left:24px"><i style="width:23px;background:#A6C98E"></i><i style="width:59px;background:#E9B48E"></i></div><div class="tl" style="padding-left:24px"><i style="width:54px;background:#5F6B66"></i><i style="width:57px;background:#A6C98E"></i><i style="width:34px;background:#E7C77F"></i><i style="width:59px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:38px;background:#E7C77F"></i><i style="width:14px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:61px;background:#B3A8E0"></i><i style="width:15px;background:#E7C77F"></i><i style="width:20px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:37px;background:#5F6B66"></i><i style="width:59px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:35px;background:#5F6B66"></i><i style="width:24px;background:#8EC3E6"></i><i style="width:59px;background:#9FD0C4"></i><i style="width:41px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:42px;background:#5F6B66"></i><i style="width:67px;background:#B3A8E0"></i><i style="width:56px;background:#5F6B66"></i><i style="width:19px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:58px;background:#9FD0C4"></i><i style="width:50px;background:#9FD0C4"></i><i style="width:36px;background:#5F6B66"></i><i style="width:64px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:15px;background:#A6C98E"></i><i style="width:33px;background:#E9B48E"></i><i style="width:26px;background:#A6C98E"></i><i style="width:49px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:59px;background:#8EC3E6"></i><i style="width:63px;background:#A6C98E"></i><i style="width:25px;background:#E9B48E"></i><i style="width:32px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:43px;background:#5F6B66"></i><i style="width:59px;background:#8EC3E6"></i><i style="width:67px;background:#5F6B66"></i><i style="width:35px;background:#E9B48E"></i></div><div class="tl" style="padding-left:24px"><i style="width:29px;background:#E9B48E"></i><i style="width:30px;background:#E9B48E"></i><i style="width:24px;background:#5F6B66"></i><i style="width:24px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:40px;background:#A6C98E"></i><i style="width:49px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:38px;background:#5F6B66"></i><i style="width:63px;background:#E9B48E"></i><i style="width:51px;background:#B3A8E0"></i><i style="width:39px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:12px"><i style="width:54px;background:#A6C98E"></i><i style="width:27px;background:#E9B48E"></i><i style="width:35px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:57px;background:#9FD0C4"></i><i style="width:36px;background:#A6C98E"></i><i style="width:19px;background:#5F6B66"></i><i style="width:19px;background:#E7C77F"></i></div><div class="tl" style="padding-left:12px"><i style="width:60px;background:#E7C77F"></i><i style="width:41px;background:#5F6B66"></i><i style="width:45px;background:#E9B48E"></i><i style="width:25px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:38px;background:#E7C77F"></i><i style="width:67px;background:#9FD0C4"></i><i style="width:25px;background:#E7C77F"></i></div><div class="tl" style="padding-left:12px"><i style="width:28px;background:#B3A8E0"></i><i style="width:28px;background:#5F6B66"></i><i style="width:58px;background:#B3A8E0"></i><i style="width:30px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:41px;background:#8EC3E6"></i><i style="width:17px;background:#9FD0C4"></i><i style="width:37px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:61px;background:#5F6B66"></i><i style="width:63px;background:#B3A8E0"></i><i style="width:51px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:12px;background:#E9B48E"></i><i style="width:42px;background:#5F6B66"></i><i style="width:32px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:12px;background:#5F6B66"></i><i style="width:64px;background:#8EC3E6"></i><i style="width:29px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:55px;background:#5F6B66"></i><i style="width:16px;background:#B3A8E0"></i><i style="width:36px;background:#A6C98E"></i><i style="width:18px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:33px;background:#A6C98E"></i><i style="width:62px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:12px"><i style="width:26px;background:#E7C77F"></i><i style="width:61px;background:#E7C77F"></i></div><div class="tl" style="padding-left:12px"><i style="width:31px;background:#9FD0C4"></i><i style="width:46px;background:#5F6B66"></i><i style="width:25px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:15px;background:#5F6B66"></i><i style="width:12px;background:#8EC3E6"></i><i style="width:60px;background:#A6C98E"></i><i style="width:29px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:21px;background:#5F6B66"></i><i style="width:20px;background:#9FD0C4"></i><i style="width:62px;background:#A6C98E"></i></div><div class="tl" style="padding-left:24px"><i style="width:32px;background:#B3A8E0"></i><i style="width:57px;background:#E9B48E"></i><i style="width:24px;background:#E9B48E"></i><i style="width:33px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:60px;background:#5F6B66"></i><i style="width:49px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:65px;background:#A6C98E"></i><i style="width:36px;background:#B3A8E0"></i><i style="width:18px;background:#B3A8E0"></i><i style="width:22px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:12px"><i style="width:13px;background:#5F6B66"></i><i style="width:12px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:12px;background:#8EC3E6"></i><i style="width:46px;background:#8EC3E6"></i><i style="width:56px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:54px;background:#9FD0C4"></i><i style="width:22px;background:#5F6B66"></i><i style="width:64px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:21px;background:#A6C98E"></i><i style="width:66px;background:#E9B48E"></i><i style="width:36px;background:#5F6B66"></i><i style="width:23px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:38px;background:#E9B48E"></i><i style="width:31px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:35px;background:#A6C98E"></i><i style="width:34px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:67px;background:#8EC3E6"></i><i style="width:45px;background:#B3A8E0"></i><i style="width:49px;background:#9FD0C4"></i><i style="width:42px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:46px;background:#A6C98E"></i><i style="width:62px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:17px;background:#A6C98E"></i><i style="width:33px;background:#9FD0C4"></i><i style="width:51px;background:#8EC3E6"></i><i style="width:64px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:12px"><i style="width:60px;background:#E9B48E"></i><i style="width:49px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:21px;background:#5F6B66"></i><i style="width:16px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:66px;background:#9FD0C4"></i><i style="width:30px;background:#9FD0C4"></i><i style="width:61px;background:#E9B48E"></i><i style="width:40px;background:#E7C77F"></i></div><div class="tl" style="padding-left:24px"><i style="width:54px;background:#E9B48E"></i><i style="width:62px;background:#5F6B66"></i><i style="width:65px;background:#E9B48E"></i><i style="width:60px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:59px;background:#A6C98E"></i><i style="width:20px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:45px;background:#5F6B66"></i><i style="width:29px;background:#A6C98E"></i><i style="width:12px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:24px"><i style="width:57px;background:#9FD0C4"></i><i style="width:47px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:60px;background:#E9B48E"></i><i style="width:14px;background:#5F6B66"></i><i style="width:37px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:27px;background:#A6C98E"></i><i style="width:20px;background:#E7C77F"></i><i style="width:65px;background:#B3A8E0"></i><i style="width:41px;background:#E9B48E"></i></div><div class="tl" style="padding-left:24px"><i style="width:63px;background:#E7C77F"></i><i style="width:55px;background:#B3A8E0"></i><i style="width:60px;background:#E7C77F"></i><i style="width:50px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:58px;background:#8EC3E6"></i><i style="width:15px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:30px;background:#A6C98E"></i><i style="width:24px;background:#5F6B66"></i><i style="width:59px;background:#E9B48E"></i><i style="width:29px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:24px"><i style="width:60px;background:#E9B48E"></i><i style="width:28px;background:#8EC3E6"></i><i style="width:15px;background:#5F6B66"></i><i style="width:46px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:24px"><i style="width:18px;background:#E7C77F"></i><i style="width:33px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:18px;background:#8EC3E6"></i><i style="width:20px;background:#8EC3E6"></i><i style="width:54px;background:#B3A8E0"></i><i style="width:41px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:60px;background:#A6C98E"></i><i style="width:42px;background:#E9B48E"></i><i style="width:44px;background:#5F6B66"></i><i style="width:50px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:66px;background:#E9B48E"></i><i style="width:23px;background:#9FD0C4"></i><i style="width:21px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:47px;background:#E9B48E"></i><i style="width:20px;background:#E7C77F"></i><i style="width:39px;background:#E7C77F"></i><i style="width:63px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:53px;background:#9FD0C4"></i><i style="width:43px;background:#B3A8E0"></i><i style="width:19px;background:#5F6B66"></i><i style="width:12px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:52px;background:#B3A8E0"></i><i style="width:21px;background:#5F6B66"></i><i style="width:43px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:34px;background:#5F6B66"></i><i style="width:58px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:55px;background:#E7C77F"></i><i style="width:12px;background:#8EC3E6"></i><i style="width:60px;background:#A6C98E"></i><i style="width:65px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:23px;background:#E9B48E"></i><i style="width:26px;background:#5F6B66"></i><i style="width:55px;background:#A6C98E"></i><i style="width:40px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:64px;background:#5F6B66"></i><i style="width:25px;background:#B3A8E0"></i><i style="width:41px;background:#5F6B66"></i><i style="width:45px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:22px;background:#9FD0C4"></i><i style="width:29px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:61px;background:#E7C77F"></i><i style="width:38px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:67px;background:#5F6B66"></i><i style="width:16px;background:#B3A8E0"></i><i style="width:16px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:51px;background:#8EC3E6"></i><i style="width:58px;background:#5F6B66"></i><i style="width:48px;background:#5F6B66"></i><i style="width:64px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:44px;background:#A6C98E"></i><i style="width:25px;background:#5F6B66"></i><i style="width:54px;background:#E9B48E"></i></div><div class="tl" style="padding-left:24px"><i style="width:36px;background:#B3A8E0"></i><i style="width:18px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:23px;background:#E7C77F"></i><i style="width:27px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:26px;background:#E9B48E"></i><i style="width:29px;background:#E9B48E"></i><i style="width:18px;background:#5F6B66"></i><i style="width:59px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:60px;background:#9FD0C4"></i><i style="width:44px;background:#9FD0C4"></i><i style="width:48px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:21px;background:#9FD0C4"></i><i style="width:62px;background:#A6C98E"></i><i style="width:49px;background:#8EC3E6"></i><i style="width:51px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:23px;background:#B3A8E0"></i><i style="width:20px;background:#B3A8E0"></i><i style="width:13px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:67px;background:#8EC3E6"></i><i style="width:29px;background:#9FD0C4"></i><i style="width:18px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:24px"><i style="width:50px;background:#5F6B66"></i><i style="width:63px;background:#5F6B66"></i><i style="width:56px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:20px;background:#5F6B66"></i><i style="width:28px;background:#B3A8E0"></i><i style="width:56px;background:#A6C98E"></i><i style="width:19px;background:#E9B48E"></i></div><div class="tl" style="padding-left:24px"><i style="width:22px;background:#A6C98E"></i><i style="width:60px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:63px;background:#B3A8E0"></i><i style="width:63px;background:#5F6B66"></i><i style="width:14px;background:#E9B48E"></i><i style="width:46px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:26px;background:#B3A8E0"></i><i style="width:21px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:24px"><i style="width:51px;background:#9FD0C4"></i><i style="width:42px;background:#5F6B66"></i><i style="width:25px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:22px;background:#9FD0C4"></i><i style="width:39px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:16px;background:#B3A8E0"></i><i style="width:55px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:33px;background:#8EC3E6"></i><i style="width:50px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:0px"><i style="width:22px;background:#9FD0C4"></i><i style="width:67px;background:#9FD0C4"></i><i style="width:21px;background:#E7C77F"></i><i style="width:38px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:52px;background:#E7C77F"></i><i style="width:18px;background:#B3A8E0"></i><i style="width:28px;background:#E9B48E"></i><i style="width:42px;background:#E9B48E"></i></div><div class="tl" style="padding-left:0px"><i style="width:41px;background:#9FD0C4"></i><i style="width:59px;background:#5F6B66"></i><i style="width:49px;background:#B3A8E0"></i></div><div class="tl" style="padding-left:0px"><i style="width:17px;background:#E9B48E"></i><i style="width:25px;background:#A6C98E"></i><i style="width:53px;background:#A6C98E"></i><i style="width:44px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:22px;background:#A6C98E"></i><i style="width:52px;background:#E9B48E"></i><i style="width:47px;background:#8EC3E6"></i><i style="width:21px;background:#E9B48E"></i></div><div class="tl" style="padding-left:12px"><i style="width:22px;background:#9FD0C4"></i><i style="width:41px;background:#E9B48E"></i><i style="width:41px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:22px;background:#A6C98E"></i><i style="width:40px;background:#E7C77F"></i><i style="width:17px;background:#A6C98E"></i><i style="width:13px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:35px;background:#B3A8E0"></i><i style="width:62px;background:#9FD0C4"></i><i style="width:35px;background:#5F6B66"></i><i style="width:13px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:12px"><i style="width:43px;background:#B3A8E0"></i><i style="width:26px;background:#A6C98E"></i></div><div class="tl" style="padding-left:0px"><i style="width:60px;background:#E7C77F"></i><i style="width:18px;background:#E9B48E"></i><i style="width:35px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:52px;background:#E7C77F"></i><i style="width:33px;background:#9FD0C4"></i></div><div class="tl" style="padding-left:0px"><i style="width:57px;background:#B3A8E0"></i><i style="width:65px;background:#5F6B66"></i></div><div class="tl" style="padding-left:24px"><i style="width:67px;background:#9FD0C4"></i><i style="width:49px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:28px;background:#9FD0C4"></i><i style="width:38px;background:#5F6B66"></i></div><div class="tl" style="padding-left:0px"><i style="width:64px;background:#E9B48E"></i><i style="width:20px;background:#5F6B66"></i><i style="width:62px;background:#5F6B66"></i><i style="width:14px;background:#A6C98E"></i></div><div class="tl" style="padding-left:12px"><i style="width:55px;background:#B3A8E0"></i><i style="width:56px;background:#8EC3E6"></i></div><div class="tl" style="padding-left:24px"><i style="width:41px;background:#5F6B66"></i><i style="width:15px;background:#E7C77F"></i></div><div class="tl" style="padding-left:0px"><i style="width:60px;background:#8EC3E6"></i><i style="width:12px;background:#E7C77F"></i><i style="width:21px;background:#E7C77F"></i></div><div class="tl" style="padding-left:12px"><i style="width:37px;background:#9FD0C4"></i><i style="width:62px;background:#E9B48E"></i></div><div class="tl" style="padding-left:12px"><i style="width:39px;background:#B3A8E0"></i><i style="width:65px;background:#B3A8E0"></i><i style="width:42px;background:#5F6B66"></i></div><div class="tl" style="padding-left:12px"><i style="width:38px;background:#9FD0C4"></i><i style="width:16px;background:#5F6B66"></i><i style="width:24px;background:#5F6B66"></i><i style="width:13px;background:#9FD0C4"></i></div></div></div>
+        <div class="carte" id="carte"></div>
+      </div>
+
+      <div class="stz">
+        <p class="st" data-t="10" data-jusqua="13">Son IA ne demande à personne&nbsp;:<br>elle lit le projet commun.</p>
+        <p class="st" data-t="13" data-jusqua="16.5">Léa, elle, travaille encore&nbsp;: ses tests Android tournent.</p>
+        <p class="st" data-t="16.5" data-jusqua="21">Nora reprend leur travail là où ils l'ont laissé.<br>Rien à recopier.</p>
+        <p class="st" data-t="21" data-jusqua="26">Léa a fini. Pendant que Nora travaille,<br>le projet lui apporte ce qui la concerne.</p>
+        <p class="st" data-t="28.5" data-jusqua="33.5">Au centre, un médiateur&nbsp;: le Greffier.<br>Il tient la synthèse et le journal.</p>
+        <p class="st" data-t="33.5" data-jusqua="38.5">Un médiateur&nbsp;: une IA réglée à votre façon.<br>Ajoutez-en autant qu'il faut.</p>
+        <p class="st" data-t="38.5" data-jusqua="44">Chacun avec ses IA&nbsp;: déjà un levier énorme.</p>
+        <p class="st" data-t="44" data-jusqua="50">Coordonnez humains et IA&nbsp;:<br>le levier devient exponentiel.</p>
+      </div>
+
+      <div class="carton fin" data-t="50">
+        <div class="pile">
+          <p class="gros" data-t="50.25" data-jusqua="52.65">Fini le copier-coller entre vos IA.</p>
+          <div class="fin2">
+            <p class="sous" data-t="52.8">Humains et IA. Enfin coordonnés.</p>
+            <p class="marque" data-t="52.95"><span class="sceau js-sceau"></span>SUSUMIBA</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- le lecteur -->
+    <div class="flash" id="flash" aria-hidden="true"><svg viewBox="0 0 24 24" id="flash-ic"></svg></div>
+    <p class="saut-txt g" id="saut-g" aria-hidden="true">− 5 s</p><p class="saut-txt d" id="saut-d" aria-hidden="true">+ 5 s</p>
+    <div class="lecteur" id="lecteur">
+      <div class="piste" id="piste" role="slider" tabindex="0" aria-label="Avancement" aria-valuemin="0" aria-valuemax="63" aria-valuenow="0"><span class="curseur" id="curseur"></span></div>
+      <div class="commandes">
+        <button type="button" id="lp" aria-label="Lecture"><svg viewBox="0 0 24 24" id="lp-ic"></svg></button>
+        <span class="temps" id="temps">0:00 / 1:03</span>
+        <span class="chapitre" id="chapitre">L'arrivée</span>
+        <button type="button" class="plein" id="plein" aria-label="Plein écran"><svg viewBox="0 0 24 24" id="plein-ic"></svg></button>
+      </div>
+    </div>
+  </div>
+  <p class="aide">Espace : lecture ou pause · ← → : 5 s en arrière ou en avant · F : plein écran · un clic sur la barre pour aller à un moment.</p>
+</main>
+
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)], Q = new URLSearchParams(location.search);
+  if (Q.has('nu')) document.documentElement.classList.add('nu');
+  /* le rythme : le récit est écrit en temps de scénario x (celui de la n° 21) ; RYTHME dit à quelle seconde réelle T chaque moment passe.
+     Repères : la charte française du sous-titrage (12 à 15 caractères par seconde), au plus 7 s par sous-titre (Netflix), et le suivi du regard
+     (Szarkowska et Gerber-Morón 2018 : on passe 40 à 60 % de la durée d'un sous-titre à le lire, le reste sur l'image).
+     Jusqu'à la moitié, on lit en regardant ce qui bouge : 13 caractères par seconde + 0,5 s ; ensuite, des idées sur une image simple : 15 + 0,4 s.
+     L'ouverture : la question se tape à 32 caractères par seconde, une ligne de réponse toutes les 1,7 s (le prénom et le mot en gras).
+     Le sous-titre « Son IA propose deux annonces » est retiré : le scénario saute de 26 à 28,5. */
+  const RYTHME = [[0, 0], [.3, .4], [2.4, 3], [2.6, 3.3], [3.1, 3.9], [3.9, 5.7], [8.4, 14.2], [9, 14.9], [10, 16.1], [13, 20.7], [16.5, 25.3], [21, 30.9], [26, 37.4], [28.5, 37.4], [33.5, 42.5], [38.5, 48], [44, 52.5], [50, 57.5], [55.6, 63.1]];
+  const versX = T => { for (let i = 1; i < RYTHME.length; i++) { const [xa, ta] = RYTHME[i - 1], [xb, tb] = RYTHME[i]; if (T < tb) return xa + (xb - xa) * (T - ta) / (tb - ta); } return RYTHME[RYTHME.length - 1][0]; };
+  const versT = x => { for (let i = 1; i < RYTHME.length; i++) { const [xa, ta] = RYTHME[i - 1], [xb, tb] = RYTHME[i]; if (x <= xb && xb > xa) return ta + (tb - ta) * Math.max(0, x - xa) / (xb - xa); } return RYTHME[RYTHME.length - 1][1]; };
+  const FIN = RYTHME[RYTHME.length - 1][1], scene = $('#scene'), plateau = $('#plateau');
+  const calme = matchMedia('(prefers-reduced-motion: reduce)').matches || Q.has('calme');
+  const ICONES = { lire: '<path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/>', pause: '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>', revoir: '<path d="M12 5V2L7.5 6 12 10V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/>', plein: '<path d="M4 9V4h5v2H6v3zm11-5h5v5h-2V6h-3zM4 15h2v3h3v2H4zm14 3v-3h2v5h-5v-2z"/>', sortir: '<path d="M7 4h2v5H4V7h3zm8 0h2v3h3v2h-5zM4 15h5v5H7v-3H4zm11 0h5v2h-3v3h-2z"/>' };
+
+  /* le sceau de la marque : un S blanc sur un carré rouge */
+  $$('.js-sceau').forEach(el => el.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate(2 50 50)"><rect x="2" y="2" width="96" height="96" rx="7" fill="#8A3835"/><text x="50" y="53" text-anchor="middle" dominant-baseline="middle" font-family="Kaisei Tokumin, serif" font-weight="700" font-size="74" fill="#F6F4EC">S</text></g></svg>');
+
+  /* la revue de Pierre : le titre et l'ouverture ; le choix reste dans ce navigateur */
+  const TITRES = [
+    ['1', 'Fini le copier-coller entre vos IA.', "Un des préférés de Pierre."],
+    ['2', 'Chacun apporte. Tout se croise. Ça avance.', 'Ancien (maquette n° 7).'],
+    ['3', 'Plus personne ne porte les messages.', 'Ancien (maquette n° 7).'],
+    ['4', 'Vos IA se parlent. Vous avancez.', 'Ancien (maquette n° 6).'],
+    ['5', 'Humains et IA. Enfin coordonnés.', 'Ancien, le titre ★ du premier écran.'],
+    ['6', 'Tout le monde pense en même temps. Rien ne se perd.', 'Ancien titre de la démo.'],
+    ['7', 'Décidé une fois. Su de tous.', 'Fable.'],
+    ['8', 'Vos IA savent ce que les autres ont décidé.', 'Fable.'],
+    ['9', 'Le bon retour, à la bonne personne, sans rien demander.', 'Fable.'],
+    ['10', 'Personne ne réexplique. Tout le monde avance.', 'Fable.'],
+    ['11', 'Un projet, plusieurs IA, une seule version.', 'Fable.']
+  ];
+  /* le choix du titre reste dans ce navigateur, pour la revue seulement : rien n'est gardé dans la version du site (?nu) */
+  const lit = k => { if (Q.has('nu')) return null; try { return localStorage.getItem(k); } catch (e) { return null; } }, garde = (k, v) => { if (Q.has('nu')) return; try { localStorage.setItem(k, v); } catch (e) {} };
+  const choix = $('#choix'), bouton = (txt, titre, clic) => { const b = Object.assign(document.createElement('button'), { type: 'button', textContent: txt, title: titre }); b.addEventListener('click', e => { e.stopPropagation(); clic(); }); return b; };
+  function titre(id) {
+    const T = TITRES.find(x => x[0] === id) || TITRES[0];
+    $('#titre').textContent = T[1]; $('#raison').textContent = T[2];
+    choix.querySelectorAll('[data-titre]').forEach(b => b.setAttribute('aria-pressed', b.dataset.titre === T[0]));
+    garde('susumiba-v22-titre', T[0]);
+  }
+  TITRES.forEach(([id, txt], i) => { if (i === 6) choix.append(Object.assign(document.createElement('span'), { className: 'sep' })); const b = bouton(id, txt, () => titre(id)); b.dataset.titre = id; choix.append(b); });
+  titre(Q.get('titre') || lit('susumiba-v22-titre') || '1');
+  const CHAPITRES = [[0, "L'arrivée"], [9, "Le projet"], [13, "Léa"], [16.5, "Le travail"], [21, "Le changement"], [28.5, "Les médiateurs"], [38.5, "Tous reliés"], [50, "Fin"]].map(([x, n]) => [+versT(x).toFixed(2), n]);
+  /* les temps clés : le Greffier en grand, le grand recul */
+  const GRAND = [[28.4, 38.5]], NUAGE = 38.5, NEUF = 2.6;
+  const items = $$('#scene [data-t]'), frappes = $$('#scene [data-txt]'), lums = $$('#scene [data-lum]'), focs = $$('#scene [data-foc]'), fills = $$('#scene [data-fill]');
+  const cin = $('#conv-in'), conv = $('#conv'), tn = $('#tn'), carte = $('#carte'), cl = $('#cl'), clin = $('#cl-in'), sesin = $('#ses-in'), ombre = $('#ombre'), saisie = $('#saisie'), rouges = $$('#scene [data-rouge]');
+  const bez = (x1, y1, x2, y2) => t => { if (t <= 0) return 0; if (t >= 1) return 1; let lo = 0, hi = 1, u = t; for (let i = 0; i < 28; i++) { u = (lo + hi) / 2; const X = 3 * (1 - u) * (1 - u) * u * x1 + 3 * (1 - u) * u * u * x2 + u * u * u; if (X < t) lo = u; else hi = u; } return 3 * (1 - u) * (1 - u) * u * y1 + 3 * (1 - u) * u * u * y2 + u * u * u; };
+  const aspire = bez(.65, 0, .35, 1);
+  let t = 0, joue = false, fini = false, manuel = false, avant = null, visible = false, affiche = !Q.has('t'), montreT = 0;
+  const dans = (x, P) => P.some(([a, b]) => x >= a && x < b), borne = v => Math.min(1, Math.max(0, v)), doux = e => e < .5 ? 4 * e * e * e : 1 - Math.pow(-2 * e + 2, 3) / 2;
+  const inter = (s, x) => s.split(' ').some(p => { const [a, b] = p.split(',').map(Number); return x >= a && x < b; });
+  const pose = (el, x, y, s, o) => { el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${s.toFixed(3)})`; el.style.opacity = o; };
+
+  /* la barre de lecture : un segment par chapitre, comme une vidéo */
+    /* la barre de lecture : un segment par chapitre, comme une vidéo */
+  const piste = $('#piste'), segs = CHAPITRES.map(([a], i) => { const b = (CHAPITRES[i + 1] || [FIN])[0], s = document.createElement('span'); s.className = 'seg'; s.style.setProperty('--w', (b - a).toFixed(1)); s.innerHTML = '<i></i>'; s.title = CHAPITRES[i][1]; piste.insertBefore(s, $('#curseur')); return [a, b, s]; });
+  const mmss = x => Math.floor(x / 60) + ':' + String(Math.floor(x % 60)).padStart(2, '0');
+
+  /* ===== les fils : un <canvas> en double résolution, redessiné à chaque rendu(x), uniquement en fonction de x ===== */
+  const PERS = [{"id":"hugo","nom":"Hugo","outil":"Claude","x":1250,"y":100,"c":"hugo","appear":9.5},{"id":"thomas","nom":"Thomas","outil":"ChatGPT","x":1470,"y":200,"c":"thomas","appear":9.55},{"id":"marc","nom":"Marc","outil":"Mistral","x":1500,"y":370,"c":"marc","appear":9.6},{"id":"jonas","nom":"Jonas","outil":"DeepSeek","x":1440,"y":520,"c":"jonas","appear":9.65},{"id":"lea","nom":"Léa","outil":"Codex","x":1130,"y":520,"c":"lea","appear":9.7}], CHIPS = [{"nom":"Centrifugeuse","x":875,"t":33.6},{"nom":"+ les vôtres","x":1015,"t":35.3}];
+  const cv = $('#fils'), cx = cv.getContext('2d');
+  const D = { x: 940, y: 310, r: 108 }, D2 = [800, 310];
+  const COL = { hugo: '#C9A24B', thomas: '#5E9FCB', marc: '#5BAE9A', jonas: '#84AF62', lea: '#8F82CF', nora: '#D9915F' }, ORANGE = '#C6613F', ROUGE = '#8A3835';
+  const FIL = { s: { a: [D.x - D.r, D.y], b: [690, D.y], t: 9.45, cur: 0 } };
+  PERS.forEach((p, i) => { const dx = p.x - D.x, dy = p.y - D.y, l = Math.hypot(dx, dy); FIL[p.id] = { a: [D.x + dx / l * D.r, D.y + dy / l * D.r], b: [p.x, p.y], t: p.appear, cur: (i % 2 ? 1 : -1) * .1 }; });
+  CHIPS.forEach((c, i) => { const dx = (c.x - D.x) * .5, dy = -Math.sqrt(D.r * D.r - dx * dx); FIL['c' + i] = { a: [D.x + dx, D.y + dy], b: [c.x, 128], t: c.t - .3, cur: 0, tire: true }; });
+  const PUL = [];
+  /* 9,6 à 13 : chaque collègue, puis le projet, puis la session de Nora ; 16,5 à 21 : les quatre traversent le projet et entrent chez Nora */
+  PERS.slice(0, 4).forEach((p, k) => { const t0 = 9.8 + .85 * k; PUL.push([p.id, t0, t0 + .55, -1, COL[p.c]], ['s', t0 + .5, t0 + 1.05, 1, COL[p.c]]); });
+  PERS.slice(0, 4).forEach((p, k) => { const t1 = 16.6 + .9 * k; PUL.push([p.id, t1, t1 + .55, -1, COL[p.c]], ['s', t1 + .5, t1 + 1.05, 1, COL[p.c]]); });
+  PUL.push(['lea', 21.3, 22.5, -1, COL.lea], ['s', 22.5, 23.6, 1, COL.lea]);
+  CHIPS.forEach((c, i) => PUL.push(['c' + i, c.t, c.t + .8, 1, ROUGE]));
+  const pt = (f, u) => { const [ax, ay] = f.a, [bx, by] = f.b, mx = (ax + bx) / 2, my = (ay + by) / 2, cX = mx - (by - ay) * f.cur, cY = my + (bx - ax) * f.cur, v = 1 - u; return [v * v * ax + 2 * v * u * cX + u * u * bx, v * v * ay + 2 * v * u * cY + u * u * by]; };
+  const lisse = u => u * u * (3 - 2 * u);
+  const lueur = (px, py, r, c, a) => { const g = cx.createRadialGradient(px, py, 0, px, py, r); g.addColorStop(0, c); g.addColorStop(1, c + '00'); cx.globalAlpha = a; cx.fillStyle = g; cx.beginPath(); cx.arc(px, py, r, 0, 7); cx.fill(); cx.globalAlpha = 1; };
+  const trace = (f, c, w, a) => { cx.globalAlpha = a; cx.strokeStyle = c; cx.lineWidth = w; cx.beginPath(); cx.moveTo(...f.a); cx.quadraticCurveTo((f.a[0] + f.b[0]) / 2 - (f.b[1] - f.a[1]) * f.cur, (f.a[1] + f.b[1]) / 2 + (f.b[0] - f.a[0]) * f.cur, ...f.b); cx.stroke(); cx.globalAlpha = 1; };
+
+  function fils(x) {
+    const sortie = 1 - borne((x - NUAGE) / .8);
+    if (sortie <= 0) return;
+    const chaud = {};
+    PUL.forEach(([k, a, b, d, c]) => { if (x >= a - .2 && x < b + .2) { const h = borne((x - a + .2) / .3) * borne((b + .2 - x) / .3); if (!chaud[k] || chaud[k][0] < h) chaud[k] = [h, c]; } });
+    cx.lineCap = 'round';
+    Object.entries(FIL).forEach(([k, f]) => {
+      const ap = borne((x - f.t) / .5) * sortie; if (ap <= 0) return;
+      if (f.tire) cx.setLineDash([3, 8]); else cx.setLineDash([]);
+      trace(f, '#9AA39B', 2.5, .34 * ap);
+      if (chaud[k]) trace(f, chaud[k][1], 4, .8 * chaud[k][0] * ap);
+    });
+    cx.setLineDash([]);
+    PUL.forEach(([k, a, b, d, c]) => {
+      if (x < a || x >= b) return;
+      const f = FIL[k], e = lisse((x - a) / (b - a)), al = borne((x - a) / .12) * borne((b - x) / .12) * sortie;
+      for (let j = 5; j >= 0; j--) { const u = borne((d > 0 ? e - j * .035 : 1 - e + j * .035)); const [px, py] = pt(f, u); lueur(px, py, 9 - j * 1.1, c, al * (1 - j * .16) * .9); }
+      const [px, py] = pt(f, d > 0 ? e : 1 - e); lueur(px, py, 17, c, al * .5); cx.globalAlpha = al; cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(px, py, 4.2, 0, 7); cx.fill(); cx.globalAlpha = 1;
+    });
+  }
+
+  /* la fin du récit : humains et IA mêlés sans régularité, en petits groupes de tailles très inégales et en isolés ; chaque humain se relie à une ou deux IA,
+     certaines IA à plusieurs humains (38,5 à 44 s) ; puis « Votre projet » au centre : tout s'y relie, des liens traversent d'un groupe à l'autre,
+     et les impulsions vont dans tous les sens, de plus en plus nombreuses (44 à 50 s). Tout est calculé à partir de x. */
+  let sd = 22; const rnd = () => { sd |= 0; sd = sd + 0x6D2B79F5 | 0; let z = Math.imul(sd ^ sd >>> 15, 1 | sd); z = z + Math.imul(z ^ z >>> 7, 61 | z) ^ z; return ((z ^ z >>> 14) >>> 0) / 4294967296; };
+  const OUTILS = ['Claude', 'ChatGPT', 'Codex', 'Mistral', 'DeepSeek'], LARG = { Claude: 62, ChatGPT: 78, Codex: 60, Mistral: 66, DeepSeek: 80 }, PAL = [COL.hugo, COL.thomas, COL.marc, COL.jonas, COL.lea, COL.nora];
+  const CX = 800, CY = 450, RD = 84;
+  const rrect = (X, Y, w, h, r) => { cx.beginPath(); cx.moveTo(X + r, Y); cx.arcTo(X + w, Y, X + w, Y + h, r); cx.arcTo(X + w, Y + h, X, Y + h, r); cx.arcTo(X, Y + h, X, Y, r); cx.arcTo(X, Y, X + w, Y, r); cx.closePath(); };
+  const NOEUDS = [], LIENS = [], RAYONS = [], TRAVERS = [];
+  (() => {
+    let nh = 0;
+    const ajoute = (x, y, g) => { const h = rnd() < .56, tag = OUTILS[Math.floor(rnd() * 5)], tw = LARG[tag]; NOEUDS.push({ x, y, g, h, tag, tw, hw: h ? 16 : tw / 2 + 4, col: h ? PAL[nh++ % 6] : null, ph: rnd(), t: 38.7 + rnd() * 3.6 }); };
+    /* des groupes de 2 à 13, un par case d'une grille de 4 × 3 tirée dans le désordre (pour couvrir toute l'image sans régularité ; jamais sur le centre), puis des isolés partout */
+    const CASES = [...Array(12).keys()].map(k => [k, rnd()]).sort((u, v) => u[1] - v[1]).map(u => u[0]);
+    [2, 3, 3, 4, 5, 6, 7, 9, 11, 13, 4, 2].forEach((n, g) => {
+      let gx = 60 + (CASES[g] % 4 + .15 + rnd() * .7) * 370, gy = 40 + (Math.floor(CASES[g] / 4) + .15 + rnd() * .7) * 273; const ex = (gx - CX) / 330, ey = (gy - CY) / 210, d = Math.hypot(ex, ey);
+      if (d < 1) { gx = CX + (gx - CX) / (d || 1); gy = CY + (gy - CY) / (d || 1); }
+      const s = 30 + n * 9 + rnd() * 30;
+      for (let j = 0; j < n; j++) { const a = rnd() * 6.283, r = s * Math.sqrt(rnd()); ajoute(gx + Math.cos(a) * r * 1.5, gy + Math.sin(a) * r, g); }
+    });
+    for (let j = 0; j < 24; j++) ajoute(60 + rnd() * 1480, 50 + rnd() * 800, -1 - j);
+    const L = NOEUDS;
+    for (let it = 0; it < 160; it++) {
+      for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) {
+        const a = L[i], b = L[j], dx = b.x - a.x, dy = b.y - a.y, ox = a.hw + b.hw + 14 - Math.abs(dx), oy = 40 - Math.abs(dy);
+        if (ox > 0 && oy > 0) {
+          if (ox / (a.hw + b.hw) < oy / 32) { const m = ox / 2 * (dx < 0 ? -1 : 1); a.x -= m; b.x += m; } else { const m = oy / 2 * (dy < 0 ? -1 : 1); a.y -= m; b.y += m; }
+        }
+      }
+      L.forEach(p => {
+        const ex = (p.x - CX) / (RD + p.hw + 40), ey = (p.y - CY) / (RD + 46), d = Math.hypot(ex, ey);
+        if (d < 1) { const k = d ? 1 / d : 1; p.x = CX + (p.x - CX || 1) * k; p.y = CY + (p.y - CY) * k; }
+        p.x = Math.min(1600 - p.hw - 24, Math.max(p.hw + 24, p.x)); p.y = Math.min(856, Math.max(40, p.y));
+      });
+    }
+    const H = L.filter(p => p.h), I = L.filter(p => !p.h), dist = (p, q) => Math.hypot(q.x - p.x, q.y - p.y), lien = (a, b) => { LIENS.push({ a, b, t: Math.max(a.t, b.t) + .25 + rnd() * .4 }); if (!b.col) b.col = a.col; };
+    /* chaque humain : son IA la plus proche, et parfois une deuxième ; une IA restée seule rejoint l'humain le plus proche */
+    H.forEach(p => { const pr = I.slice().sort((u, v) => dist(p, u) - dist(p, v)); lien(p, pr[0]); if (pr[1] && dist(p, pr[1]) < 240 && rnd() < .45) lien(p, pr[1]); });
+    I.filter(q => !q.col).forEach(q => lien(H.slice().sort((u, v) => dist(q, u) - dist(q, v))[0], q));
+    /* le projet : un fil vers chaque humain et vers une partie des IA */
+    L.forEach(p => {
+      if (!p.h && rnd() < .55) return;
+      const dx = p.x - CX, dy = p.y - CY, l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l, cur = (rnd() - .5) * .3;
+      const ax = CX + ux * RD, ay = CY + uy * RD, mx = (ax + p.x) / 2, my = (ay + p.y) / 2;
+      RAYONS.push({ p, ax, ay, bx: p.x, by: p.y, cx: mx - (p.y - ay) * cur, cy: my + (p.x - ax) * cur, f0: 44.2 + l / 950 * 1.3 + rnd() * .4 });
+    });
+    /* des échanges d'un groupe à l'autre, humains comme IA */
+    for (let k = 0; k < 400 && TRAVERS.length < 26; k++) {
+      const a = L[Math.floor(rnd() * L.length)], b = L[Math.floor(rnd() * L.length)], d = dist(a, b);
+      if (a.g === b.g || d < 220 || d > 760) continue;
+      const cur = (rnd() - .5) * .5, mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      TRAVERS.push({ p: a, ax: a.x, ay: a.y, bx: b.x, by: b.y, cx: mx - (b.y - a.y) * cur, cy: my + (b.x - a.x) * cur, t: 45.4 + rnd() * 2.2 });
+    }
+  })();
+  const qp = (e, u) => { const v = 1 - u; return [v * v * e.ax + 2 * v * u * e.cx + u * u * e.bx, v * v * e.ay + 2 * v * u * e.cy + u * u * e.by]; };
+  const courbe = (e, g) => { cx.beginPath(); cx.moveTo(e.ax, e.ay); for (let k = 1; k <= 16; k++) { const [px, py] = qp(e, g * k / 16); cx.lineTo(px, py); } };
+  function nuage(x) {
+    if (x < NUAGE - .1) return;
+    const emb = borne((x - 45) / 4.5);
+    cx.lineCap = 'round'; cx.lineJoin = 'round';
+    /* les échanges d'un groupe à l'autre */
+    TRAVERS.forEach(e => { const g = lisse(borne((x - e.t) / .8)); if (g <= 0) return; courbe(e, g); cx.globalAlpha = .25 + .4 * emb; cx.strokeStyle = e.p.col; cx.lineWidth = 1.2 + emb; cx.stroke(); });
+    /* les fils vers le centre : ils poussent du disque vers chacun */
+    RAYONS.forEach(r => {
+      const g = lisse(borne((x - r.f0) / .7)); if (g <= 0) return;
+      courbe(r, g);
+      cx.globalAlpha = .55; cx.strokeStyle = '#B3AEA0'; cx.lineWidth = 1.6; cx.stroke();
+      if (emb > 0) { cx.globalAlpha = emb * .7; cx.strokeStyle = r.p.col; cx.lineWidth = 1.6 + emb * 1.3; cx.stroke(); }
+    });
+    /* chaque humain et ses IA : des liens courts, qui se tracent dès 38,5 s */
+    LIENS.forEach(e => {
+      const g = lisse(borne((x - e.t) / .45)); if (g <= 0) return;
+      cx.globalAlpha = .75; cx.strokeStyle = e.a.col; cx.lineWidth = 2.2 + emb;
+      cx.beginPath(); cx.moveTo(e.a.x, e.a.y); cx.lineTo(e.a.x + (e.b.x - e.a.x) * g, e.a.y + (e.b.y - e.a.y) * g); cx.stroke();
+    });
+    cx.globalAlpha = 1;
+    /* les humains (un bonhomme) et les IA (une étiquette en texte) */
+    NOEUDS.forEach(p => {
+      const ap = borne((x - p.t) / .45); if (ap <= 0) return;
+      const sc = .7 + .3 * lisse(ap);
+      if (emb > 0) lueur(p.x, p.y, 34, p.col, ap * emb * .4 * (.55 + .45 * Math.sin(x * 4 + p.ph * 6.28)));
+      cx.globalAlpha = ap;
+      if (p.h) {
+        cx.fillStyle = '#9AA39B';
+        cx.beginPath(); cx.arc(p.x, p.y - 7, 7.5 * sc, 0, 7); cx.fill();
+        cx.beginPath(); cx.arc(p.x, p.y + 14, 13.5 * sc, Math.PI, 0); cx.closePath(); cx.fill();
+      } else {
+        cx.fillStyle = '#E4E0D3'; rrect(p.x - p.tw / 2, p.y - 12, p.tw, 24, 8); cx.fill();
+        cx.fillStyle = '#4A4F4B'; cx.font = '600 15px "Zen Maru Gothic", system-ui, sans-serif'; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+        cx.fillText(p.tag, p.x, p.y + 1); cx.textAlign = 'start';
+      }
+      cx.globalAlpha = 1;
+    });
+    /* le projet, au centre */
+    const dk = lisse(borne((x - 44) / .5));
+    if (dk > 0) {
+      cx.save(); cx.translate(CX, CY); cx.scale(dk, dk);
+      if (emb > 0) lueur(0, 0, 190, ORANGE, emb * .45);
+      cx.fillStyle = '#FBF7F0'; cx.shadowColor = 'rgba(30,35,31,.22)'; cx.shadowBlur = 24; cx.shadowOffsetY = 8;
+      cx.beginPath(); cx.arc(0, 0, RD, 0, 7); cx.fill(); cx.shadowColor = 'transparent';
+      cx.lineWidth = 2.5; cx.strokeStyle = emb > .3 ? ROUGE : 'rgba(30,35,31,.14)'; cx.stroke();
+      cx.fillStyle = '#1E231F'; cx.font = '500 31px "Kaisei Tokumin", Georgia, serif'; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+      cx.fillText('Votre', 0, -17); cx.fillText('projet', 0, 20);
+      cx.textAlign = 'start'; cx.restore();
+    }
+    /* les impulsions : du centre, vers le centre, entre un humain et ses IA, d'un groupe à l'autre ; de plus en plus nombreuses */
+    if (x >= 44.9) {
+      const n = Math.floor(6 + 190 * emb * emb), aa = borne((x - 44.9) / .4);
+      for (let i = 0; i < n; i++) {
+        const kind = i % 4, sp = .55 + ((i * 37) % 11) / 11 * .7, ph = (x * sp + i * .618) % 1, u = (i & 4) ? ph : 1 - ph;
+        let px, py, c;
+        if (kind < 2) { const r = RAYONS[(i * 29 + 7) % RAYONS.length]; if (x < r.f0 + .7) continue; [px, py] = qp(r, u); c = r.p.col; }
+        else if (kind === 2) { const e = LIENS[(i * 41 + 3) % LIENS.length]; px = e.a.x + (e.b.x - e.a.x) * u; py = e.a.y + (e.b.y - e.a.y) * u; c = e.a.col; }
+        else { const e = TRAVERS[(i * 13 + 5) % TRAVERS.length]; if (x < e.t + .8) continue; [px, py] = qp(e, u); c = e.p.col; }
+        lueur(px, py, 10, c, .85 * aa); cx.fillStyle = '#fff'; cx.globalAlpha = .9 * aa; cx.beginPath(); cx.arc(px, py, 2.4, 0, 7); cx.fill(); cx.globalAlpha = 1;
+      }
+    }
+  }
+
+  function rendu(T, net) {
+    const x = versX(T);
+    items.forEach(el => { const d = el.dataset, on = x >= +d.t && x < (d.jusqua ? +d.jusqua : Infinity); if (on && !net && !calme && !el.classList.contains('on') && el.classList.contains('m')) el.classList.add('arrive'); el.classList.toggle('on', on); });
+    frappes.forEach(el => { const s = el.dataset.txt, nb = Math.max(0, Math.floor((x - +el.dataset.t) * +(el.dataset.cps || 40))); el.textContent = s.slice(0, nb); el.classList.toggle('tape', nb < s.length || (x < +el.dataset.jusqua && Math.floor(x * 2.2) % 2 === 0)); });
+    focs.forEach(el => el.classList.toggle('foc', inter(el.dataset.foc, x)));
+    lums.forEach(el => el.classList.toggle('lum', inter(el.dataset.lum, x)));
+    fills.forEach(el => { const [a, b] = el.dataset.fill.split(',').map(Number); el.style.setProperty('--p', borne((x - a) / (b - a)).toFixed(3)); });
+    scene.classList.toggle('grand', dans(x, GRAND));
+    scene.classList.toggle('nuage', x >= NUAGE);
+    /* 0 à 9 s : la fenêtre de Claude, comme dans la A */
+    saisie.classList.toggle('plein', !!saisie.querySelector('.ecrit.on'));
+    scene.classList.toggle('neuf', x < NEUF);
+    $('#compte').classList.toggle('calme', x >= 3.9);
+    rouges.forEach(el => { const [a, b] = el.dataset.rouge.split(',').map(Number); el.classList.toggle('rouge', x >= a && x < b); });
+    /* 9 à 10 s : elle rétrécit jusqu'à la place exacte de la session abstraite (position, taille, 1 s, courbe d'aspiration) ; le texte réel s'efface, les traits apparaissent, les pastilles restent */
+    const E = x < 9 ? 0 : x >= 10 ? 1 : aspire(x - 9), sx = 1 - .6 * E, sy = 1 - (1 - 460 / 900) * E;
+    cl.classList.toggle('mv', x >= 9);
+    cl.style.transform = E ? `translate(${(50 * E).toFixed(2)}px, ${(80 * E).toFixed(2)}px) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})` : 'none';
+    clin.style.transform = E ? `scale(1, ${(sx / sy).toFixed(4)})` : 'none';
+    cl.style.borderRadius = E ? `${(22 * E / sx).toFixed(2)}px / ${(22 * E / sy).toFixed(2)}px` : '0';
+    cl.style.visibility = x >= 10.02 ? 'hidden' : '';
+    cl.style.setProperty('--tx', (1 - borne(E / .55)).toFixed(3));
+    cl.style.setProperty('--bg', (1 - borne((E - .35) / .4)).toFixed(3));
+    cl.style.setProperty('--tp', (1 - borne((E - .4) / .3)).toFixed(3));
+    sesin.style.opacity = x >= 10 ? '' : borne((E - .4) / .5).toFixed(3);
+    ombre.style.opacity = E.toFixed(3);
+    /* la conversation défile pour garder le dernier bloc visible */
+    const vus = [...cin.children].filter(e => e.offsetHeight > 0), der = vus[vus.length - 1];
+    cin.style.transform = `translateY(${der ? Math.min(0, conv.clientHeight - (der.offsetTop + der.offsetHeight + 14)) : 0}px)`;
+    /* la fenêtre de Léa : des lignes en grande quantité, très vite, puis elle se fige */
+    tn.style.transform = `translateY(${(-450 * Math.max(0, Math.min(x, 21) - 13.2)).toFixed(1)}px)`;
+    /* la carte part de Léa vers le disque, le long du fil */
+    if (x >= 21.2 && x < 22.7) { const e = doux(borne((x - 21.3) / 1.1)), [qx, qy] = pt(FIL.lea, 1 - e); pose(carte, qx, qy, 1 - .4 * e, Math.min(1, (x - 21.2) / .12, (22.7 - x) / .25).toFixed(2)); } else carte.style.opacity = 0;
+    /* les fils */
+    cx.setTransform(2, 0, 0, 2, 0, 0); cx.clearRect(0, 0, 1600, 900); cx.globalAlpha = 1;
+    fils(x); nuage(x);
+    /* le lecteur */
+    segs.forEach(([a, b, s]) => s.style.setProperty('--p', borne((T - a) / (b - a)).toFixed(4)));
+    $('#curseur').style.setProperty('--x', (100 * T / FIN).toFixed(2) + '%');
+    $('#temps').textContent = mmss(T) + ' / ' + mmss(FIN);
+    $('#chapitre').textContent = CHAPITRES[CHAPITRES.filter(c => T >= c[0]).length - 1][1];
+    piste.setAttribute('aria-valuenow', Math.round(T));
+  }
+
+  const saut = x => { $$('#scene .arrive').forEach(e => e.classList.remove('arrive')); scene.classList.add('saut'); rendu(x, true); void scene.offsetWidth; requestAnimationFrame(() => scene.classList.remove('saut')); };
+  const icone = n => { $('#lp-ic').innerHTML = ICONES[n]; $('#lp').setAttribute('aria-label', n === 'pause' ? 'Pause' : n === 'revoir' ? 'Revoir' : 'Lecture'); };
+  const etat = () => { scene.classList.toggle('arret', !joue); icone(joue ? 'pause' : fini ? 'revoir' : 'lire'); };
+  /* dans la page du site, la démo dit jusqu'où on l'a regardée (un quart, la moitié, trois quarts, la fin), pour la mesure d'audience de la page */
+  const ETAPES = [.25, .5, .75, 1], vues = new Set();
+  const signale = T => { if (!Q.has('nu') || parent === window) return; ETAPES.forEach(e => { if (T >= e * FIN - .05 && !vues.has(e)) { vues.add(e); try { parent.postMessage({ susumiba: 'demo', etape: Math.round(e * 100) }, '*'); } catch (x) {} } }); };
+  function boucle(ts) {
+    if (!joue) return;
+    if (avant !== null) t = Math.min(FIN, t + (ts - avant) / 1000);
+    avant = ts; rendu(t); signale(t);
+    if (t >= FIN) { joue = false; fini = true; etat(); } else requestAnimationFrame(boucle);
+  }
+  function lire() { if (affiche) { affiche = false; t = 0; saut(0); } if (fini) { t = 0; fini = false; saut(0); } joue = true; avant = null; etat(); requestAnimationFrame(boucle); }
+  function pause() { joue = false; etat(); }
+  function va(a) { manuel = true; affiche = false; t = Math.min(FIN, Math.max(0, a)); fini = t >= FIN; saut(t); etat(); }
+  const flash = (n) => { const f = $('#flash'); $('#flash-ic').innerHTML = ICONES[n]; f.classList.remove('va'); void f.offsetWidth; f.classList.add('va'); };
+  const bascule = () => { manuel = true; if (joue) { pause(); flash('pause'); } else { lire(); flash('lire'); } };
+  const pousse = d => { va(t + d); const el = $(d < 0 ? '#saut-g' : '#saut-d'); el.classList.remove('va'); void el.offsetWidth; el.classList.add('va'); };
+  const montre = () => { scene.classList.add('montre'); clearTimeout(montreT); montreT = setTimeout(() => scene.classList.remove('montre'), 2000); };
+
+  /* le plein écran : refusé dans certaines vues, on l'ignore alors */
+  const ecranPlein = () => document.fullscreenElement === scene;
+  const plein = () => { manuel = true; try { const p = ecranPlein() ? document.exitFullscreen() : scene.requestFullscreen(); if (p && p.catch) p.catch(() => {}); } catch (e) {} };
+  const iconePlein = () => { $('#plein-ic').innerHTML = ICONES[ecranPlein() ? 'sortir' : 'plein']; $('#plein').setAttribute('aria-label', ecranPlein() ? 'Quitter le plein écran' : 'Plein écran'); };
+  $('#plein').addEventListener('click', e => { e.stopPropagation(); plein(); });
+  document.addEventListener('fullscreenchange', iconePlein); iconePlein();
+  scene.addEventListener('dblclick', e => { if (!e.target.closest('.lecteur')) plein(); });
+  $('#lp').addEventListener('click', e => { e.stopPropagation(); manuel = true; joue ? pause() : lire(); });
+  $('#lecteur').addEventListener('click', e => e.stopPropagation());
+  scene.addEventListener('click', bascule);
+  scene.addEventListener('pointermove', montre);
+  /* se déplacer : un clic ou un glissé sur la barre */
+  let glisse = false, repJoue = false;
+  const posPiste = e => { const r = piste.getBoundingClientRect(); return borne((e.clientX - r.left) / r.width) * FIN; };
+  piste.addEventListener('pointerdown', e => { e.stopPropagation(); glisse = true; repJoue = joue; joue = false; piste.setPointerCapture(e.pointerId); va(posPiste(e)); });
+  piste.addEventListener('pointermove', e => { if (glisse) va(posPiste(e)); });
+  piste.addEventListener('pointerup', () => { if (!glisse) return; glisse = false; if (repJoue && !fini) lire(); });
+  addEventListener('keydown', e => {
+    if (!visible || e.target.closest('button, a, input, textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === ' ' || e.key === 'k') { e.preventDefault(); bascule(); }
+    else if (e.key === 'ArrowRight' || e.key === 'l') { e.preventDefault(); pousse(e.key === 'l' ? 10 : 5); if (joue) { avant = null; } montre(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'j') { e.preventDefault(); pousse(e.key === 'j' ? -10 : -5); if (joue) { avant = null; } montre(); }
+    else if (e.key === 'Home' || e.key === '0') { e.preventDefault(); va(0); }
+    else if (e.key === 'f') { e.preventDefault(); plein(); }
+  });
+  function echelle() { const w = scene.clientWidth, h = scene.clientHeight, k = Math.min(w / 1600, h / 900); scene.style.setProperty('--k', k); scene.style.setProperty('--dx', ((w - 1600 * k) / 2).toFixed(1) + 'px'); scene.style.setProperty('--dy', ((h - 900 * k) / 2).toFixed(1) + 'px'); saut(affiche ? 5 : t); }
+  new ResizeObserver(echelle).observe(scene);
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible && !manuel && !fini) lire(); else if (!visible && joue) pause(); }, { threshold: .5 }).observe(scene);
+  if (Q.has('t')) { t = Math.min(FIN, +Q.get('t')); manuel = true; fini = t >= FIN; }
+  else if (calme) { t = FIN; fini = true; manuel = true; affiche = false; }
+  etat(); echelle();
+})();
+</script>

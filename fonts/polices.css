@@ -1,0 +1,57 @@
+/* Kaisei Tokumin, Zen Maru Gothic, BIZ UDGothic (SIL Open Font License), réduites aux lettres du site par publier.py */
+@font-face {
+  font-family: 'BIZ UDGothic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/p4.woff2) format('woff2');
+  unicode-range: U+20-5b, U+5d-7e, U+ab, U+b0, U+b7, U+bb, U+c0-c2, U+c7-ca, U+cc-ce, U+d2-d4, U+d7, U+d9-db, U+dd, U+e0-e2, U+e7-ea, U+ec-ee, U+f2-f4, U+f9-fb, U+fd, U+106-109, U+11c-11d, U+122-125, U+134-137, U+139-13c, U+143-146, U+154-157, U+15a-15f, U+162-163, U+174-177, U+179-17a, U+1f4-1f5, U+1f8-1f9, U+228-229, U+300-302, U+327, U+1e08-1e09, U+1e10-1e11, U+1e28-1e29, U+1e30-1e31, U+1e3e-1e3f, U+1e54-1e55, U+1e80-1e83, U+1e90-1e91, U+1ea4-1ea7, U+1ebe-1ec1, U+1ed0-1ed3, U+1ef2-1ef3, U+2013-2014, U+2019, U+201c-201d, U+2026, U+20ac, U+2190, U+2192, U+2212, U+2605, U+307f, U+5834, U+9032;
+}
+@font-face {
+  font-family: 'BIZ UDGothic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/p3.woff2) format('woff2');
+  unicode-range: U+20-5b, U+5d-7e, U+ab, U+b0, U+b7, U+bb, U+c0-c2, U+c7-ca, U+cc-ce, U+d2-d4, U+d7, U+d9-db, U+dd, U+e0-e2, U+e7-ea, U+ec-ee, U+f2-f4, U+f9-fb, U+fd, U+106-109, U+11c-11d, U+122-125, U+134-137, U+139-13c, U+143-146, U+154-157, U+15a-15f, U+162-163, U+174-177, U+179-17a, U+1f4-1f5, U+1f8-1f9, U+228-229, U+300-302, U+327, U+1e08-1e09, U+1e10-1e11, U+1e28-1e29, U+1e30-1e31, U+1e3e-1e3f, U+1e54-1e55, U+1e80-1e83, U+1e90-1e91, U+1ea4-1ea7, U+1ebe-1ec1, U+1ed0-1ed3, U+1ef2-1ef3, U+2013-2014, U+2019, U+201c-201d, U+2026, U+20ac, U+2190, U+2192, U+2212, U+2605, U+307f, U+5834, U+9032;
+}
+@font-face {
+  font-family: 'Kaisei Tokumin';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/p1.woff2) format('woff2');
+  unicode-range: U+20-5b, U+5d-7e, U+ab, U+b0, U+b7, U+bb, U+c0-c2, U+c7-ca, U+cc-ce, U+d2-d4, U+d7, U+d9-db, U+dd, U+e0-e2, U+e7-ea, U+ec-ee, U+f2-f4, U+f9-fb, U+fd, U+106-109, U+11c-11d, U+122-125, U+134-137, U+139-13c, U+143-146, U+154-157, U+15a-15f, U+162-163, U+174-177, U+179-17a, U+1f4-1f5, U+1f8-1f9, U+228-229, U+300-302, U+327, U+1e08-1e09, U+1e10-1e11, U+1e28-1e29, U+1e30-1e31, U+1e3e-1e3f, U+1e54-1e55, U+1e80-1e83, U+1e90-1e91, U+1ea4-1ea7, U+1ebe-1ec1, U+1ed0-1ed3, U+1ef2-1ef3, U+2013-2014, U+2019, U+201c-201d, U+2026, U+20ac, U+2190, U+2192, U+2212, U+2605, U+307f, U+5834, U+9032;
+}
+@font-face {
+  font-family: 'Kaisei Tokumin';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/p2.woff2) format('woff2');
+  unicode-range: U+20-5b, U+5d-7e, U+ab, U+b0, U+b7, U+bb, U+c0-c2, U+c7-ca, U+cc-ce, U+d2-d4, U+d7, U+d9-db, U+dd, U+e0-e2, U+e7-ea, U+ec-ee, U+f2-f4, U+f9-fb, U+fd, U+106-109, U+11c-11d, U+122-125, U+134-137, U+139-13c, U+143-146, U+154-157, U+15a-15f, U+162-163, U+174-177, U+179-17a, U+1f4-1f5, U+1f8-1f9, U+228-229, U+300-302, U+327, U+1e08-1e09, U+1e10-1e11, U+1e28-1e29, U+1e30-1e31, U+1e3e-1e3f, U+1e54-1e55, U+1e80-1e83, U+1e90-1e91, U+1ea4-1ea7, U+1ebe-1ec1, U+1ed0-1ed3, U+1ef2-1ef3, U+2013-2014, U+2019, U+201c-201d, U+2026, U+20ac, U+2190, U+2192, U+2212, U+2605, U+307f, U+5834, U+9032;
+}
+@font-face {
+  font-family: 'Zen Maru Gothic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/p5.woff2) format('woff2');
+  unicode-range: U+20-5b, U+5d-7e, U+ab, U+b0, U+b7, U+bb, U+c0-c2, U+c7-ca, U+cc-ce, U+d2-d4, U+d7, U+d9-db, U+dd, U+e0-e2, U+e7-ea, U+ec-ee, U+f2-f4, U+f9-fb, U+fd, U+106-109, U+11c-11d, U+122-125, U+134-137, U+139-13c, U+143-146, U+154-157, U+15a-15f, U+162-163, U+174-177, U+179-17a, U+1f4-1f5, U+1f8-1f9, U+228-229, U+300-302, U+327, U+1e08-1e09, U+1e10-1e11, U+1e28-1e29, U+1e30-1e31, U+1e3e-1e3f, U+1e54-1e55, U+1e80-1e83, U+1e90-1e91, U+1ea4-1ea7, U+1ebe-1ec1, U+1ed0-1ed3, U+1ef2-1ef3, U+2013-2014, U+2019, U+201c-201d, U+2026, U+20ac, U+2190, U+2192, U+2212, U+2605, U+307f, U+5834, U+9032;
+}
+@font-face {
+  font-family: 'Zen Maru Gothic';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/p6.woff2) format('woff2');
+  unicode-range: U+20-5b, U+5d-7e, U+ab, U+b0, U+b7, U+bb, U+c0-c2, U+c7-ca, U+cc-ce, U+d2-d4, U+d7, U+d9-db, U+dd, U+e0-e2, U+e7-ea, U+ec-ee, U+f2-f4, U+f9-fb, U+fd, U+106-109, U+11c-11d, U+122-125, U+134-137, U+139-13c, U+143-146, U+154-157, U+15a-15f, U+162-163, U+174-177, U+179-17a, U+1f4-1f5, U+1f8-1f9, U+228-229, U+300-302, U+327, U+1e08-1e09, U+1e10-1e11, U+1e28-1e29, U+1e30-1e31, U+1e3e-1e3f, U+1e54-1e55, U+1e80-1e83, U+1e90-1e91, U+1ea4-1ea7, U+1ebe-1ec1, U+1ed0-1ed3, U+1ef2-1ef3, U+2013-2014, U+2019, U+201c-201d, U+2026, U+20ac, U+2190, U+2192, U+2212, U+2605, U+307f, U+5834, U+9032;
+}
+@font-face {
+  font-family: 'Zen Maru Gothic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/p7.woff2) format('woff2');
+  unicode-range: U+20-5b, U+5d-7e, U+ab, U+b0, U+b7, U+bb, U+c0-c2, U+c7-ca, U+cc-ce, U+d2-d4, U+d7, U+d9-db, U+dd, U+e0-e2, U+e7-ea, U+ec-ee, U+f2-f4, U+f9-fb, U+fd, U+106-109, U+11c-11d, U+122-125, U+134-137, U+139-13c, U+143-146, U+154-157, U+15a-15f, U+162-163, U+174-177, U+179-17a, U+1f4-1f5, U+1f8-1f9, U+228-229, U+300-302, U+327, U+1e08-1e09, U+1e10-1e11, U+1e28-1e29, U+1e30-1e31, U+1e3e-1e3f, U+1e54-1e55, U+1e80-1e83, U+1e90-1e91, U+1ea4-1ea7, U+1ebe-1ec1, U+1ed0-1ed3, U+1ef2-1ef3, U+2013-2014, U+2019, U+201c-201d, U+2026, U+20ac, U+2190, U+2192, U+2212, U+2605, U+307f, U+5834, U+9032;
+}
