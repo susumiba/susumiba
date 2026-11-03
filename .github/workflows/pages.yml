@@ -1,0 +1,38 @@
+# The website, susumiba.com: the page (site/) plus, at its root, the files AIs read (ia.md, setup.md).
+# ia.md and setup.md are taken from the root at every push, so the address and the file never drift apart.
+name: Website
+
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', 'ia.md', 'setup.md', 'CNAME', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Put the page and the files AIs read together
+        run: |
+          mkdir _site
+          cp -R site/. _site/
+          cp ia.md setup.md CNAME _site/
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
