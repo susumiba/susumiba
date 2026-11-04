@@ -14,7 +14,7 @@ Paste this into an AI that can run commands on your computer (the Claude desktop
 
 > Lis https://susumiba.com/ia.md et dis-moi ce que ça pourrait m'apporter.
 
-Your AI tells you what it could change for you, from what it already knows of you and your projects, or after one or two questions and a look at your documents. If you want to try, it does a first real piece on your computer. Invited to a project? Say so, and your AI joins it. Accounts come only when someone else joins. Alone, it is already useful: a project that keeps itself in order, ready for whoever you invite later.
+Your AI tells you what it could change for you, from what it already knows of you and your projects, or after one or two questions and a look at your documents. If you want to try, it does a first real piece on your computer. Invited to a project? Say so, and your AI joins it. Accounts come only when someone else joins. Solo, everything stays in order: switch from one AI to another without starting over, and bring someone in later, easily.
 
 ## Two examples
 
